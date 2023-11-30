@@ -1,0 +1,37 @@
+@import '../../../styles.scss';
+
+.navbar {
+  background: #191C24;
+  color: #fff;
+  height: 70px;
+  width: 100%;
+}
+
+.navbar__navegacao {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.navbar__navegacao-icon {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  p {
+    margin-bottom: 0;
+  }
+}
+
+.navbar-list__item {
+  cursor: pointer;
+  color: #fff;
+}
+
+.navbar-list__icon {
+  color: #fff;
+  font-size: 2rem !important;
+  height: 2rem !important;
+  width: 2rem !important;
+}
+

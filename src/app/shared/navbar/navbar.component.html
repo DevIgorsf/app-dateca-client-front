@@ -1,0 +1,21 @@
+<header class="navbar">
+  <nav class="navbar__navegacao">
+    <div class="nav-logo">
+      <img src="assets/images/DATECA.png">
+    </div>
+    <div class="dropdown" *ngIf="user$ | async as user">
+      <button mat-button class ="navbar__navegacao-icon" [matMenuTriggerFor]="menu" >
+        <mat-icon class="navbar-list__icon" aria-hidden="false" fontIcon="account_circle"></mat-icon>
+        <p class="navbar-list__item">Igor Soares</p>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item>Perfil</button>
+        <button mat-menu-item>
+          <a class="dropdown-item text-danger" (click)="logout()">
+            <span class="ms-2">Logout</span>
+          </a>
+        </button>
+      </mat-menu>
+    </div>
+  </nav>
+</header>

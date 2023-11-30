@@ -1,0 +1,118 @@
+<div class="dashboard">
+
+  <a class="col-2 mb-10" role="button" routerLink="/client/quizz" >
+    <mat-card class="dashboard__card" style="background: rgba(0, 128, 0, 0.692);"
+      onmouseover="this.style.background='rgb(40, 180, 30)'"
+      onmouseout="this.style.background='rgba(0, 128, 0, 0.692)'">
+      <mat-card-content>
+        <h2>Quizz</h2>
+        <mat-icon aria-hidden="false" fontIcon="format_list_bulleted"></mat-icon>
+      </mat-card-content>
+  </mat-card>
+  </a>
+
+
+  <mat-card class="col-2 mb-10 dashboard__card" style="background: rgba(255, 0, 0, 0.623);"
+  onmouseover="this.style.background='rgb(206, 15, 15)'"
+  onmouseout="this.style.background='rgba(255, 0, 0, 0.623)'">
+    <mat-card-content>
+      <h2>Adicionar</h2>
+      <mat-icon aria-hidden="false" fontIcon="person_add"></mat-icon>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="col-2 mb-10 dashboard__card" style="background: rgba(0, 217, 255, 0.623);"
+  onmouseover="this.style.background='rgb(0, 217, 255)'"
+  onmouseout="this.style.background='rgba(0, 217, 255, 0.623)'">
+    <mat-card-content>
+      <h2>Pontuaçao</h2>
+      <mat-icon aria-hidden="false" fontIcon="leaderboard"></mat-icon>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="col-4 mb-10"></div>
+
+
+  <mat-card class="col-5">
+    <mat-card-header>
+      <h2><b>Ranking Geral</b></h2>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-list role="list">
+        <mat-list-item role="listitem">
+          <div class="dashboard__list">
+            <div class="col-2">
+              #86
+            </div>
+            <div class="col-8">
+              Alex
+            </div>
+            <div class="col-2">
+              150
+            </div>
+          </div>
+        </mat-list-item>
+        <mat-list-item role="listitem">
+          <div class="dashboard__list">
+            <div class="col-2">
+              #87
+            </div>
+            <div class="col-8">
+              Juninho
+            </div>
+            <div class="col-2">
+              150
+            </div>
+          </div>
+        </mat-list-item>
+        <mat-list-item role="listitem">
+          <div class="dashboard__list">
+            <div class="col-2">
+              #88
+            </div>
+            <div class="col-8">
+              Pedro
+            </div>
+            <div class="col-2">
+              120
+            </div>
+          </div>
+        </mat-list-item>
+        <mat-list-item role="listitem">
+          <div class="dashboard__list">
+            <div class="col-2">
+              #89
+            </div>
+            <div class="col-8">
+              Mateus
+            </div>
+            <div class="col-2">
+              110
+            </div>
+          </div>
+        </mat-list-item>
+      </mat-list>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="col-5">
+    <mat-card-content class="full-height">
+      <div class="podio-container">
+        <div class="podio-item">
+          <mat-icon class="star podio-icon mb-3">emoji_events</mat-icon>
+          <div class="podio-position mb-3">1º<mat-icon aria-hidden="false" fontIcon="account_circle"></mat-icon></div>
+          <div class="podio-position-one"></div>
+        </div>
+        <div class="podio-item">
+          <div class="podio-position mb-3">2º<mat-icon aria-hidden="false" fontIcon="account_circle"></mat-icon></div>
+          <div class="podio-position-two"></div>
+        </div>
+        <div class="podio-item">
+          <div class="podio-position mb-3">3º<mat-icon aria-hidden="false" fontIcon="account_circle"></mat-icon></div>
+          <div class="podio-position-three"></div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+</div>

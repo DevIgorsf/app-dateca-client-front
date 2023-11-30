@@ -1,0 +1,125 @@
+<div class="question__header">
+  <a role="button" routerLink="/client/dashboard">
+    <mat-icon aria-hidden="false" fontIcon="arrow_back"></mat-icon>
+  </a>
+</div>
+<div class="question">
+  <div class="question__button">
+    <button type="button">
+      <mat-icon aria-hidden="false" fontIcon="check"></mat-icon>
+      <p>Responder</p>
+    </button>
+  </div>
+  <div class="question__enunciado">
+    <p>
+      O regime internacional de mudanças climáticas, organizado no âmbito do Sistema das Nações Unidas
+      há 24 anos, constitui, em essência, um arranjo institucional dinâmico e de construção permanente.
+      Criado para facilitar o entendimento e promover a cooperação entre as 195 partes signatárias, é dotado
+      de estrutura jurídica e organizacional próprias. A Convenção Quadro das Nações Unidas sobre mudanças
+      climáticas prevê mecanismos para a solução dos conflitos e para promoção da cooperação entre os
+      Estados nacionais.
+      A partir do contexto apresentado, é correto afirmar que a Convenção Quadro das Nações Unidas sobre
+      mudanças climáticas objetiva
+    </p>
+  </div>
+  <form [formGroup]="formulario">
+    <mat-radio-group aria-label="Select an option" formControlName="correctAnswer">
+      <div class="form-group">
+        <mat-radio-button
+          class="form-group__radio"
+          value="A">
+        </mat-radio-button>
+        <label
+          class="form-group__label"
+          for="alternativeA">
+          A
+        </label>
+
+        <p>
+          estimular atores estatais e não estatais a planejar e a executar conjuntamente programas dedicados a
+          garantir a redução da interferência humana no meio ambiente.
+        </p>
+
+      </div>
+
+      <div class="form-group">
+        <mat-radio-button
+          class="form-group__radio"
+          value="B">
+        </mat-radio-button>
+        <label
+          class="form-group__label"
+          for="alternativeB">
+          B
+        </label>
+
+        <p>
+          evitar a propagação do efeito estufa por meio da criação de projetos que visem à redução das
+          emissões a partir de medidas compensatórias, como plantação de árvores e melhor utilização de
+          recursos naturais.
+        </p>
+
+      </div>
+
+      <div class="form-group">
+        <mat-radio-button
+          class="form-group__radio"
+          value="C">
+        </mat-radio-button>
+        <label
+          class="form-group__label"
+          for="alternativeC">
+          C
+        </label>
+
+        <p>
+          estabelecer mecanismos flexíveis destinados a permitir que países que não utilizam toda a sua quota
+          prevista de emissões vendam o seu excedente a outros que necessitam de limites maiores.
+        </p>
+
+      </div>
+
+      <div class="form-group">
+        <mat-radio-button
+          class="form-group__radio"
+          value="D">
+        </mat-radio-button>
+        <label
+          class="form-group__label"
+          for="alternativeD">
+          D
+        </label>
+
+        <p>
+          promover o princípio da responsabilidade comum e demandas diferenciadas para permitir que os
+          países desenvolvidos alterem a média global de aumento da temperatura acordada.
+        </p>
+
+      </div>
+
+      <div class="form-group">
+        <mat-radio-button
+          class="form-group__radio"
+          value="E">
+        </mat-radio-button>
+
+        <p class="form-group__label">
+          E
+        </p>
+
+        <p class="form-group__texto">
+          assegurar a continuidade dos compromissos para que as metas de redução de emissão mantenham-se
+          regulares e estáveis ao longo dos próximos vinte anos.
+        </p>
+
+      </div>
+    </mat-radio-group>
+
+    <div class="question__button">
+      <button type="button" (click)="answerQuestion()" [disabled]="!formulario.valid">
+        <mat-icon aria-hidden="false" fontIcon="check"></mat-icon>
+        <p>Responder</p>
+      </button>
+    </div>
+  </form>
+</div>
