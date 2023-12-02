@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { QuestionService } from 'src/app/service/question/question.service';
 
@@ -7,9 +7,18 @@ import { QuestionService } from 'src/app/service/question/question.service';
   templateUrl: './question.component.html',
   styleUrls: ['./question.component.scss']
 })
-export class QuestionComponent {
+export class QuestionComponent implements OnInit {
 
   formulario: FormGroup;
+  dado: any;
+
+  id: any;
+  statement: any;
+  alternativeA: any;
+  alternativeB: any;
+  alternativeC: any;
+  alternativeD: any;
+  alternativeE: any;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -20,12 +29,22 @@ export class QuestionComponent {
     });
   }
 
+  ngOnInit() {
+    this.questionService.getQuestaoAleatoria().subscribe((dado: any) => {
+      this.id = dado.id;
+      this.statement = dado.statement;
+      this.alternativeA = dado.alternativeA;
+      this.alternativeB = dado.alternativeB;
+      this.alternativeC = dado.alternativeC;
+      this.alternativeD = dado.alternativeD;
+      this.alternativeE = dado.alternativeE;
+    });
+  }
+
 
   answerQuestion() {
-    console.log("passou");
-    console.log(this.formulario.value);
-    // this.questionService.answerQuestion(this.formulario).subscribe(
-    //   (data: any) => console.log(data)
-    // );
+    this.questionService.answerQuestion(this.id, this.formulario).subscribe(
+      (data: any) => console.log(data)
+    );
   }
 }
