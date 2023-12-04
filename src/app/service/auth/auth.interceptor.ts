@@ -21,6 +21,9 @@ export class AuthInterceptor implements HttpInterceptor {
       if (request.url.includes('/login')) {
         return next.handle(request); // Não aplicar o interceptor durante o login
       }
+      if (request.url.includes('/cadastro')) {
+        return next.handle(request); // Não aplicar o interceptor durante o cadastro
+      }
       if (this.tokenService.possuiToken()) {
         const token = this.tokenService.retornaToken();
         const headers = new HttpHeaders().set('authorization', 'Bearer ' + token);

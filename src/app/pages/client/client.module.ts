@@ -13,6 +13,7 @@ import { MatListModule } from '@angular/material/list';
 import { QuestionComponent } from './question/question.component';
 import {MatRadioModule} from '@angular/material/radio';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { QuestionRespostaComponent } from './question-resposta/question-resposta.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     ClientComponent,
     NavbarComponent,
     QuestionComponent,
+    QuestionRespostaComponent,
   ],
   imports: [
     CommonModule,

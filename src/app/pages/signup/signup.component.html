@@ -1,28 +1,42 @@
 <div class="container">
   <mat-card>
-    <mat-card-header>
-      <mat-card-title>Formulário do Aluno</mat-card-title>
+    <mat-card-header class="cadastro__title">
+      <mat-card-title>Cadastro</mat-card-title>
     </mat-card-header>
 
     <mat-card-content>
-      <form [formGroup]="alunoForm" (ngSubmit)="onSubmit()">
-        <mat-form-field>
-          <input matInput placeholder="Nome" formControlName="nome">
+      <form
+      class="cadastro__form"
+      [formGroup]="alunoForm"
+      (ngSubmit)="onSubmit()">
+        <mat-form-field class="cadastro__input">
+          <input matInput placeholder="Nome" formControlName="name">
         </mat-form-field>
 
-        <mat-form-field>
-          <input matInput placeholder="Número de Matrícula" formControlName="matricula">
+        <mat-form-field class="cadastro__input">
+          <input matInput placeholder="Número de Matrícula" formControlName="registrationNumber">
         </mat-form-field>
 
-        <mat-form-field>
-          <input matInput placeholder="Telefone" formControlName="telefone">
+        <mat-form-field class="cadastro__input">
+          <input matInput placeholder="Telefone" formControlName="phone">
         </mat-form-field>
 
-        <mat-form-field>
+        <mat-form-field class="cadastro__input">
           <input matInput type="email" placeholder="Email Institucional" formControlName="email">
         </mat-form-field>
 
-        <button mat-raised-button color="primary" type="submit">Enviar</button>
+        <div>
+
+        </div>
+        <div class="cadastro__button">
+          <button mat-raised-button
+            routerLink="/login"
+            class="mr-10"
+            color="secundary"
+            type="submit">Cancelar
+          </button>
+          <button mat-raised-button color="primary" type="submit">Cadastrar</button>
+        </div>
       </form>
     </mat-card-content>
   </mat-card>

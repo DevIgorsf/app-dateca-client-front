@@ -1,0 +1,33 @@
+.container {
+  margin: 0 0;
+  background: #191C24;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cadastro__form {
+  display: grid;
+  width: 70vw;
+  grid-template-columns: 1fr 1fr
+}
+
+.cadastro__title {
+  justify-content: center;
+  margin: 20px 0 50px;
+
+  & mat-card-title {
+    font-size: 2em;
+  }
+}
+
+.cadastro__input {
+  margin: 0 30px 50px;
+}
+
+.cadastro__button {
+  display: flex;
+  justify-content: end;
+  margin: 0 30px;
+}

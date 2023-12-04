@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { SigninComponent } from './pages/signin/signin.component';
 import { LoginGuard } from './service/auth/login.guard';
 import { AuthGuard } from './service/auth/auth.guard';
+import { SignupComponent } from './pages/signup/signup.component';
 
 const routes: Routes = [
   {
@@ -14,6 +15,10 @@ const routes: Routes = [
     path: 'login',
     component: SigninComponent,
     canLoad: [LoginGuard]
+  },
+  {
+    path: 'cadastro',
+    component: SignupComponent
   },
   {
     path: 'client',

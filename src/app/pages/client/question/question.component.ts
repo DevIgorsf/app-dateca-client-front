@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { QuestionService } from 'src/app/service/question/question.service';
 
 @Component({
@@ -23,6 +24,7 @@ export class QuestionComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private questionService: QuestionService,
+    private route: Router
   ) {
     this.formulario = this.formBuilder.group({
       correctAnswer: ['', Validators.required]
@@ -38,13 +40,23 @@ export class QuestionComponent implements OnInit {
       this.alternativeC = dado.alternativeC;
       this.alternativeD = dado.alternativeD;
       this.alternativeE = dado.alternativeE;
+
+      this.questionService.setStatement(dado.statement);
+      this.questionService.setAlternativeA(dado.alternativeA);
+      this.questionService.setAlternativeB(dado.alternativeB);
+      this.questionService.setAlternativeC(dado.alternativeC);
+      this.questionService.setAlternativeD(dado.alternativeD);
+      this.questionService.setAlternativeE(dado.alternativeE);
     });
   }
 
 
   answerQuestion() {
-    this.questionService.answerQuestion(this.id, this.formulario).subscribe(
-      (data: any) => console.log(data)
+    this.questionService.answerQuestion(this.id, this.formulario.value).subscribe(
+      (data: any) => {
+        this.questionService.setAnswer(data);
+        this.route.navigate(['client/quizz/resposta']);
+      }
     );
   }
 }

@@ -20,6 +20,12 @@
   transform: translate(-50%, -50%);
 }
 
+.login__button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .login form {
   width: 450px;
   text-align: center;
@@ -82,6 +88,7 @@
   color: #FFF;
   font-size: 20px;
   margin-top: 25px;
+  margin-bottom: 12px;
   cursor: pointer;
   width: 240px;
   height: 40px;
@@ -90,6 +97,24 @@
   &:hover {
     background: #47A5FC;
     border: 2px solid #47A5FC;
+  }
+}
+
+.cadastro-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  background: rgb(103, 119, 134);
+  color: #FFF;
+  font-size: 20px;
+  cursor: pointer;
+  width: 240px;
+  height: 40px;
+  border-radius: 10px;
+
+  &:hover {
+    background: rgba(103, 119, 134, 0.692);
   }
 }
 
