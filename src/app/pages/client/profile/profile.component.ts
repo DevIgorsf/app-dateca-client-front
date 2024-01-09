@@ -1,15 +1,14 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CadastroService } from 'src/app/service/cadastro/cadastro.service';
 import { Router } from '@angular/router';
+import { CadastroService } from 'src/app/service/cadastro/cadastro.service';
 
 @Component({
-  selector: 'app-signup',
-  templateUrl: './signup.component.html',
-  styleUrls: ['./signup.component.scss']
+  selector: 'app-profile',
+  templateUrl: './profile.component.html',
+  styleUrls: ['./profile.component.scss']
 })
-
-export class SignupComponent {
+export class ProfileComponent {
   alunoForm: FormGroup;
 
   constructor(
@@ -39,5 +38,4 @@ export class SignupComponent {
       );
     }
   }
-
 }

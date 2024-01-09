@@ -11,9 +11,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
 import { QuestionComponent } from './question/question.component';
-import {MatRadioModule} from '@angular/material/radio';
+import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { QuestionRespostaComponent } from './question-resposta/question-resposta.component';
+import { ProfileComponent } from './profile/profile.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   declarations: [
@@ -22,6 +25,7 @@ import { QuestionRespostaComponent } from './question-resposta/question-resposta
     NavbarComponent,
     QuestionComponent,
     QuestionRespostaComponent,
+    ProfileComponent,
   ],
   imports: [
     CommonModule,
@@ -34,7 +38,11 @@ import { QuestionRespostaComponent } from './question-resposta/question-resposta
     MatIconModule,
     MatCardModule,
     MatListModule,
-    MatRadioModule
+    MatRadioModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatToolbarModule,
+    MatInputModule
   ],
   exports: [ClientComponent],
 })

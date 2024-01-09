@@ -9,20 +9,32 @@
       class="cadastro__form"
       [formGroup]="alunoForm"
       (ngSubmit)="onSubmit()">
-        <mat-form-field class="cadastro__input">
+        <mat-form-field class="cadastro__input" appearance="fill">
           <input matInput placeholder="Nome" formControlName="name">
+          <mat-error *ngIf="alunoForm.get('name')?.errors">
+            Nome é <strong>obrigatório</strong>
+          </mat-error>
         </mat-form-field>
 
-        <mat-form-field class="cadastro__input">
+        <mat-form-field class="cadastro__input" appearance="fill">
           <input matInput placeholder="Número de Matrícula" formControlName="registrationNumber">
+          <mat-error *ngIf="alunoForm.get('registrationNumber')?.errors">
+            Número de Matrícula é <strong>obrigatório</strong>
+          </mat-error>
         </mat-form-field>
 
-        <mat-form-field class="cadastro__input">
+        <mat-form-field class="cadastro__input" appearance="fill">
           <input matInput placeholder="Telefone" formControlName="phone">
+          <mat-error *ngIf="alunoForm.get('phone')?.errors">
+            Telefone é <strong>obrigatório</strong>
+          </mat-error>
         </mat-form-field>
 
-        <mat-form-field class="cadastro__input">
+        <mat-form-field class="cadastro__input" appearance="fill">
           <input matInput type="email" placeholder="Email Institucional" formControlName="email">
+          <mat-error *ngIf="alunoForm.get('email')?.errors">
+            Email é <strong>obrigatório</strong>
+          </mat-error>
         </mat-form-field>
 
         <div>

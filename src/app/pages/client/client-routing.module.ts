@@ -4,6 +4,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ClientComponent } from './client.component';
 import { QuestionComponent } from './question/question.component';
 import { QuestionRespostaComponent } from './question-resposta/question-resposta.component';
+import { ProfileComponent } from './profile/profile.component';
 
 
 
@@ -15,6 +16,10 @@ const routes: Routes = [
       {
         path: 'dashboard',
         component: DashboardComponent,
+      },
+      {
+        path: 'perfil',
+        component: ProfileComponent,
       },
       {
         path: 'quizz',
