@@ -17,4 +17,12 @@ export class StudentService {
   rankingStudent(): Observable<any> {
     return this.http.get(`${API}/aluno/ranking`);
   }
+
+  getStudent(): Observable<any> {
+    return this.http.get(`${API}/aluno/perfil`);
+  }
+
+  updateStudent(value: any) {
+    return this.http.put(`${API}/aluno/perfil`, value);
+  }
 }
