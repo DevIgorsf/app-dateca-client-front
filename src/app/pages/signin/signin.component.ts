@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/service/auth/auth.service';
 
 
@@ -15,20 +16,24 @@ export class SigninComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {}
 
   logIn() {
-    this.authService.autenticar(this.login, this.password).subscribe(
-      () => {
+    this.authService.autenticar(this.login, this.password).subscribe({
+      next: () => {
         this.router.navigate(['client/dashboard']);
       },
-      (error) => {
-        console.log(error)
-        alert('Login ou senha inválido');
-      }
-    );
+      error: (error) => {
+        if (error.status === 403) {
+          this.toastr.error('Acesso proibido. Verifique suas credenciais.');
+        } else {
+          this.toastr.error(error.message);
+        }
+      },
+    });
   }
 }

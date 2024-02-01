@@ -26,6 +26,13 @@ export class UserService {
     return this.usuarioSubject.asObservable();
   }
 
+  verificarRole(token: string) {
+    const usuario = jwt_decode(token) as User;
+    if (usuario.role !== "ALUNO"){
+      throw new Error('Usuário não tem permissão ALUNO');
+    }
+  }
+
   salvaToken(token: string) {
     this.tokenService.salvaToken(token);
     this.decodificaJWT();

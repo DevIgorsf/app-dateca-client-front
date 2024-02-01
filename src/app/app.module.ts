@@ -16,6 +16,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { SignupComponent } from './pages/signup/signup.component';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,9 @@ import { SignupComponent } from './pages/signup/signup.component';
     MessageModule,
     AuthModule,
     BrowserAnimationsModule,
+    ToastrModule.forRoot({
+      positionClass: 'toast-center',
+    }),
     MatCardModule,
     MatInputModule,
     MatButtonModule,
