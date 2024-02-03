@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { User } from './../../interfaces/user';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { TokenService } from './token.service';
 import { jwtDecode as jwt_decode} from 'jwt-decode';
 
@@ -28,7 +28,7 @@ export class UserService {
 
   verificarRole(token: string) {
     const usuario = jwt_decode(token) as User;
-    if (usuario.role !== "ALUNO"){
+    if (usuario.role !== "STUDENT"){
       throw new Error('Usuário não tem permissão ALUNO');
     }
   }

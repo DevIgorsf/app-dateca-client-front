@@ -6,7 +6,7 @@
     <div class="dropdown" *ngIf="user$ | async as user">
       <button mat-button class ="navbar__navegacao-icon" [matMenuTriggerFor]="menu" >
         <mat-icon class="navbar-list__icon" aria-hidden="false" fontIcon="account_circle"></mat-icon>
-        <p class="navbar-list__item">Igor Soares</p>
+        <p class="navbar-list__item">{{ getFirstName(student?.name) }}</p>
       </button>
       <mat-menu #menu="matMenu">
         <button mat-menu-item routerLink="/client/perfil">Perfil</button>
