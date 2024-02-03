@@ -29,7 +29,7 @@ export class SigninComponent implements OnInit {
       },
       error: (error) => {
         if (error.status === 403) {
-          this.toastr.error('Acesso proibido. Verifique suas credenciais.');
+          this.toastr.error('Acesso negado. Verifique suas credenciais.');
         } else {
           this.toastr.error(error.message);
         }
