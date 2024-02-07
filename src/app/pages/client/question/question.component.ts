@@ -12,8 +12,10 @@ export class QuestionComponent implements OnInit {
 
   formulario: FormGroup;
   dado: any;
+  images:any;
 
   id: any;
+  idImages: any;
   statement: any;
   alternativeA: any;
   alternativeB: any;
@@ -35,6 +37,15 @@ export class QuestionComponent implements OnInit {
     this.questionService.getQuestaoAleatoria().subscribe((dado: any) => {
       this.id = dado.id;
       this.statement = dado.statement;
+      this.idImages = dado.IdImages[0],
+      this.questionService.getImages(dado.IdImages[0]).subscribe(
+        (response: any) => {
+          this.images = 'data:image/jpeg;base64,' + response.imagem;
+        },
+        (error) => {
+          console.error('Erro ao buscar a imagem:', error);
+        }
+      );
       this.alternativeA = dado.alternativeA;
       this.alternativeB = dado.alternativeB;
       this.alternativeC = dado.alternativeC;
@@ -48,6 +59,8 @@ export class QuestionComponent implements OnInit {
       this.questionService.setAlternativeD(dado.alternativeD);
       this.questionService.setAlternativeE(dado.alternativeE);
     });
+
+    
   }
 
 

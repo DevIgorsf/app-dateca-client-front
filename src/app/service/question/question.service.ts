@@ -81,6 +81,10 @@ export class QuestionService {
     return this.http.get(`${API}/questao/aluno`);
   }
 
+  getImages(idImages: any): Observable<any> {
+    return this.http.get(`${API}/questao/imagens/${idImages}`);
+  }
+
   answerQuestion(id: any, question: any): any {
     return this.http.post<any>(`${API}/questao/answerQuestion/${id}`, question);
   }

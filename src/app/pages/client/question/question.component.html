@@ -11,6 +11,9 @@
     </button>
   </div>
   <div class="question__enunciado">
+    <img [src]="images" alt="Imagem" *ngIf="images">
+  </div>
+  <div class="question__enunciado">
     <p>
       {{ statement }}
     </p>
