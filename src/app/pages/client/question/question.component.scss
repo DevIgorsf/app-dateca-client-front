@@ -49,6 +49,68 @@
 
 }
 
+.carousel {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+}
+
+.slides {
+  display: flex;
+  overflow-x: hidden;
+}
+
+.slide {
+  flex-shrink: 0; 
+  margin: 0 10px; 
+}
+
+.slide__image {
+  max-width: 100%;
+  max-height: 300px;
+  height: auto;
+  display: block; 
+  margin: 0 auto; 
+}
+
+.slide__image--hidden {
+  display: none;
+}
+
+.carousel__button {
+  padding: 10px;
+  color: #FFF;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s; /* Adiciona uma transição suave */
+
+    &:hover {
+      transform: scale(2.0); /* Aumenta o tamanho do botão em 20% ao passar o mouse */
+    }
+  }
+
+  .indicators {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    margin-top: 10px;
+  }
+  
+  .indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #ccc;
+    margin: 0 5px;
+    cursor: pointer;
+  }
+  
+  .indicator.active {
+    background-color: #333;
+  }
+
 .form-group{
   display: flex;
   flex-direction: row;

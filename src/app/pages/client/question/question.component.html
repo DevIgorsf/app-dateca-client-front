@@ -10,12 +10,24 @@
       <p>Responder</p>
     </button>
   </div>
-  <div class="question__enunciado">
-    <img [src]="images" alt="Imagem" *ngIf="images">
+  
+  <div class="carousel" *ngIf="images && images.length > 0">
+    <button class="carousel__button" (click)="prevSlide()"><i class="bi bi-caret-left-fill"></i></button>
+    <div class="slides">
+      <div *ngFor="let image of images; let i = index" class="slide" >
+        <img [ngClass]="{'slide__image': i == slideIndex, 'slide__image--hidden': i != slideIndex}" [src]="image" alt="Imagem {{ i + 1 }} de {{ images.length }}" />
+      </div>
+    </div>
+    <button class="carousel__button" (click)="nextSlide()"><i class="bi bi-caret-right-fill"></i></button>
   </div>
+  
+  <div class="indicators">
+    <span class="indicator" *ngFor="let image of images; let i = index" [class.active]="i === slideIndex" (click)="goToSlide(i)"></span>
+  </div>
+  
   <div class="question__enunciado">
     <p>
-      {{ statement }}
+      Enunciado: {{ statement }}
     </p>
   </div>
   <form [formGroup]="formulario">
