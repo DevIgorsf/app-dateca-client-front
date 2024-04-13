@@ -17,6 +17,7 @@ import { QuestionRespostaComponent } from './question-resposta/question-resposta
 import { ProfileComponent } from './profile/profile.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { EnadeComponent } from './enade/enade.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { MatInputModule } from '@angular/material/input';
     QuestionComponent,
     QuestionRespostaComponent,
     ProfileComponent,
+    EnadeComponent,
   ],
   imports: [
     CommonModule,

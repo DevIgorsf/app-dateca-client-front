@@ -1,0 +1,128 @@
+<div class="question__header">
+    <a role="button" routerLink="/client/dashboard">
+      <mat-icon aria-hidden="false" fontIcon="arrow_back"></mat-icon>
+    </a>
+  </div>
+  <div class="question">
+    <div class="question__button">
+      <button type="button" (click)="answerQuestion()" [disabled]="!formulario.valid">
+        <mat-icon aria-hidden="false" fontIcon="check"></mat-icon>
+        <p>Responder</p>
+      </button>
+    </div>
+    
+    <div class="carousel" *ngIf="images && images.length > 0">
+      <button class="carousel__button" (click)="prevSlide()"><i class="bi bi-caret-left-fill"></i></button>
+      <div class="slides">
+        <div *ngFor="let image of images; let i = index" class="slide" >
+          <img [ngClass]="{'slide__image': i == slideIndex, 'slide__image--hidden': i != slideIndex}" [src]="image" alt="Imagem {{ i + 1 }} de {{ images.length }}" />
+        </div>
+      </div>
+      <button class="carousel__button" (click)="nextSlide()"><i class="bi bi-caret-right-fill"></i></button>
+    </div>
+    
+    <div class="indicators">
+      <span class="indicator" *ngFor="let image of images; let i = index" [class.active]="i === slideIndex" (click)="goToSlide(i)"></span>
+    </div>
+    
+    <div class="question__enunciado">
+      <p>
+        Enunciado: {{ statement }}
+      </p>
+    </div>
+    <form [formGroup]="formulario">
+      <mat-radio-group aria-label="Select an option" formControlName="correctAnswer">
+        <div class="form-group">
+          <mat-radio-button
+            class="form-group__radio"
+            value="A">
+          </mat-radio-button>
+          <label
+            class="form-group__label"
+            for="alternativeA">
+            A
+          </label>
+  
+          <p>
+            {{ alternativeA }}
+          </p>
+  
+        </div>
+  
+        <div class="form-group">
+          <mat-radio-button
+            class="form-group__radio"
+            value="B">
+          </mat-radio-button>
+          <label
+            class="form-group__label"
+            for="alternativeB">
+            B
+          </label>
+  
+          <p>
+            {{ alternativeB }}
+          </p>
+  
+        </div>
+  
+        <div class="form-group">
+          <mat-radio-button
+            class="form-group__radio"
+            value="C">
+          </mat-radio-button>
+          <label
+            class="form-group__label"
+            for="alternativeC">
+            C
+          </label>
+  
+          <p>
+            {{ alternativeC }}
+          </p>
+  
+        </div>
+  
+        <div class="form-group">
+          <mat-radio-button
+            class="form-group__radio"
+            value="D">
+          </mat-radio-button>
+          <label
+            class="form-group__label"
+            for="alternativeD">
+            D
+          </label>
+  
+          <p>
+            {{ alternativeD }}
+          </p>
+  
+        </div>
+  
+        <div class="form-group">
+          <mat-radio-button
+            class="form-group__radio"
+            value="E">
+          </mat-radio-button>
+  
+          <p class="form-group__label">
+            E
+          </p>
+  
+          <p class="form-group__texto">
+            {{ alternativeE }}
+          </p>
+  
+        </div>
+      </mat-radio-group>
+  
+      <div class="question__button">
+        <button type="button" (click)="answerQuestion()" [disabled]="!formulario.valid">
+          <mat-icon aria-hidden="false" fontIcon="check"></mat-icon>
+          <p>Responder</p>
+        </button>
+      </div>
+    </form>
+  </div>
+  
