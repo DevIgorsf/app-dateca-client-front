@@ -10,6 +10,11 @@
         <p>Responder</p>
       </button>
     </div>
+    <div class="question__title">
+      <p>
+        {{year}} - {{ number }}
+      </p>
+    </div>
     
     <div class="carousel" *ngIf="images && images.length > 0">
       <button class="carousel__button" (click)="prevSlide()"><i class="bi bi-caret-left-fill"></i></button>

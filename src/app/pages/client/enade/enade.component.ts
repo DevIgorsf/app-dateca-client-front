@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { EnadeWithImage } from 'src/app/interfaces/EnadeWithImage';
 import { EnadeService } from 'src/app/service/enade/enade.service';
 
 @Component({
@@ -14,7 +15,8 @@ export class EnadeComponent {
   images:any;
 
   id: any;
-  idImages: any;
+  year: any;
+  number: any;
   statement: any;
   alternativeA: any;
   alternativeB: any;
@@ -37,16 +39,20 @@ export class EnadeComponent {
   }
 
   ngOnInit() {
-    this.enadeService.getEnadeAleatoria().subscribe((dado: any) => {
+    this.enadeService.getEnadeAleatoria().subscribe((dado: EnadeWithImage) => {
       this.id = dado.id;
+      this.year = dado.year;
+      this.number = dado.number;
       this.statement = dado.statement;
-      this.idImages = dado.idImages[0],
       this.alternativeA = dado.alternativeA;
       this.alternativeB = dado.alternativeB;
       this.alternativeC = dado.alternativeC;
       this.alternativeD = dado.alternativeD;
       this.alternativeE = dado.alternativeE;
+      this.images = dado.images,
 
+      this.enadeService.setYear(dado.year);
+      this.enadeService.setNumber(dado.number);
       this.enadeService.setStatement(dado.statement);
       this.enadeService.setAlternativeA(dado.alternativeA);
       this.enadeService.setAlternativeB(dado.alternativeB);
@@ -54,15 +60,10 @@ export class EnadeComponent {
       this.enadeService.setAlternativeD(dado.alternativeD);
       this.enadeService.setAlternativeE(dado.alternativeE);
 
-      if(dado.IdImages[0]) {
-        this.enadeService.getImages(dado.idImages[0]).subscribe(
-          (response: any) => {
-            this.images = 'data:image/jpeg;base64,' + response.imagem;
-          },
-          (error) => {
-            console.error('Erro ao buscar a imagem:', error);
-          }
-        );
+      if(dado.images.length > 0) {
+        this.images = dado.images.map(response => {
+          return 'data:image/jpeg;base64,' + response.imagem;
+        });
       }
     });
 
@@ -86,7 +87,6 @@ export class EnadeComponent {
       this.slideIndex--;
       this.updateSlideOffset();
     } else {
-      // Se estiver na primeira imagem, volte para a última
       this.slideIndex = this.images.length - 1;
       this.updateSlideOffset();
     }
@@ -97,7 +97,6 @@ export class EnadeComponent {
       this.slideIndex++;
       this.updateSlideOffset();
     } else {
-      // Se estiver na última imagem, volte para a primeira
       this.slideIndex = 0;
       this.updateSlideOffset();
     }

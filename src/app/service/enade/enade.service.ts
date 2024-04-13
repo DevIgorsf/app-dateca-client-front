@@ -10,6 +10,8 @@ const API = environment.ApiUrl;
 })
 export class EnadeService {
   private answer: any;
+  private year: any;
+  private number: any;
   private statement: any;
   private alternativeA: any;
   private alternativeB: any;
@@ -23,6 +25,14 @@ export class EnadeService {
 
   getAnswer(): any {
     return this.answer;
+  }
+
+  getYear(): any {
+    return this.year;
+  }
+
+  getNumber(): any {
+    return this.number;
   }
 
   getStatement(): any {
@@ -51,6 +61,14 @@ export class EnadeService {
 
    setAnswer(data: any) {
     this.answer = data;
+  }
+
+  setYear(data: any): any {
+    this.year = data;
+  }
+
+  setNumber(data: any): any {
+    this.number = data;
   }
 
   setStatement(data: any) {

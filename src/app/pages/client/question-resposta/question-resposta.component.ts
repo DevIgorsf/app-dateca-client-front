@@ -19,7 +19,6 @@ export class QuestionRespostaComponent {
   question__resposta: any;
 
   constructor(
-    private route: ActivatedRoute,
     private questionService: QuestionService,
   ) {}
 
