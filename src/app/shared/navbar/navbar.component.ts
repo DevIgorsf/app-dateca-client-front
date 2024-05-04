@@ -8,7 +8,7 @@ import { StudentService } from 'src/app/service/student/student.service';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   user$ = this.userService.retornaUsuario();
   student: any;
 
