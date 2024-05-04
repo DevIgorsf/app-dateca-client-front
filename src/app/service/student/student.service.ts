@@ -18,6 +18,10 @@ export class StudentService {
     return this.http.get(`${API}/aluno/ranking`);
   }
 
+  getRanking(): Observable<any> {
+    return this.http.get(`${API}/aluno/ranking-geral`);
+  }
+
   getStudent(): Observable<any> {
     return this.http.get(`${API}/aluno/perfil`);
   }
