@@ -7,6 +7,8 @@ import { QuestionRespostaComponent } from './question-resposta/question-resposta
 import { ProfileComponent } from './profile/profile.component';
 import { EnadeComponent } from './enade/enade.component';
 import { EnadeRespostaComponent } from './enade-resposta/enade-resposta.component';
+import { PontuacaoComponent } from './pontuacao/pontuacao.component';
+import { AdicionarComponent } from './adicionar/adicionar.component';
 
 
 
@@ -38,6 +40,14 @@ const routes: Routes = [
       {
         path: 'enade/resposta',
         component: EnadeRespostaComponent,
+      },
+      {
+        path: 'adicionar',
+        component: AdicionarComponent,
+      },
+      {
+        path: 'pontuacao',
+        component: PontuacaoComponent,
       },
     ]
   },

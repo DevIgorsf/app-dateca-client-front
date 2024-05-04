@@ -23,23 +23,27 @@
   </a>
 
 
-  <mat-card class="col-2 mb-10 dashboard__card" style="background: rgba(255, 0, 0, 0.623);"
-  onmouseover="this.style.background='rgb(206, 15, 15)'"
-  onmouseout="this.style.background='rgba(255, 0, 0, 0.623)'">
-    <mat-card-content>
-      <h2>Adicionar</h2>
-      <mat-icon aria-hidden="false" fontIcon="person_add"></mat-icon>
-    </mat-card-content>
-  </mat-card>
+  <a class="col-2 mb-10" role="button" routerLink="/client/adicionar" >
+    <mat-card class="col-2 mb-10 dashboard__card" style="background: rgba(255, 0, 0, 0.623);"
+    onmouseover="this.style.background='rgb(206, 15, 15)'"
+    onmouseout="this.style.background='rgba(255, 0, 0, 0.623)'">
+      <mat-card-content>
+        <h2>Adicionar</h2>
+        <mat-icon aria-hidden="false" fontIcon="person_add"></mat-icon>
+      </mat-card-content>
+    </mat-card>
+  </a>
 
-  <mat-card class="col-2 mb-10 dashboard__card" style="background: rgba(0, 217, 255, 0.623);"
-  onmouseover="this.style.background='rgb(0, 217, 255)'"
-  onmouseout="this.style.background='rgba(0, 217, 255, 0.623)'">
-    <mat-card-content>
-      <h2>Pontuação</h2>
-      <mat-icon aria-hidden="false" fontIcon="leaderboard"></mat-icon>
-    </mat-card-content>
-  </mat-card>
+  <a class="col-2 mb-10" role="button" routerLink="/client/pontuacao" >
+    <mat-card class="dashboard__card" style="background: rgba(0, 217, 255, 0.623);"
+    onmouseover="this.style.background='rgb(0, 217, 255)'"
+    onmouseout="this.style.background='rgba(0, 217, 255, 0.623)'">
+      <mat-card-content>
+        <h2>Pontuação</h2>
+        <mat-icon aria-hidden="false" fontIcon="leaderboard"></mat-icon>
+      </mat-card-content>
+    </mat-card>
+  </a>
 
   <div class="col-2 mb-10"></div>
 

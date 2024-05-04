@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  ApiUrl: 'https://dateca.com.br'
+  ApiUrl: 'https://app-dateca-backend-production.up.railway.app'
 };

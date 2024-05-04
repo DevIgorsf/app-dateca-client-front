@@ -1,0 +1,24 @@
+.ranking {
+    margin: 1rem 4rem;
+}
+
+.ranking__list {
+    display: flex;
+    flex-direction: row;
+}
+
+.ranking__header {
+    display: flex;
+    align-items: center;
+    height: 50px;
+    margin-bottom: 1rem;
+  
+    & a {
+      display: flex;
+      padding: 6px;
+      color: #fff;
+      background: rgb(0, 119, 255);
+      border: 1px solid;
+      border-radius: 12px;
+    }
+}
