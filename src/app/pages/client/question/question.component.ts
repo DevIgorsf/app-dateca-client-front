@@ -1,7 +1,8 @@
+
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { isEmpty } from 'rxjs';
+import { QuestionMultipleChoice } from 'src/app/interfaces/questionMultipleChoice';
 import { QuestionService } from 'src/app/service/question/question.service';
 
 @Component({
@@ -13,10 +14,9 @@ export class QuestionComponent implements OnInit {
 
   formulario: FormGroup;
   dado: any;
-  images:any;
+  images: any[] = [];
 
   id: any;
-  idImages: any;
   statement: any;
   alternativeA: any;
   alternativeB: any;
@@ -25,8 +25,8 @@ export class QuestionComponent implements OnInit {
   alternativeE: any;
 
   @Input() items: any[] = [];
-  slideIndex: number = 0;
-  slideOffset: string = '0';
+  slideIndex = 0;
+  slideOffset = '0';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -39,10 +39,10 @@ export class QuestionComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.questionService.getQuestaoAleatoria().subscribe((dado: any) => {
+    this.questionService.getQuestaoAleatoria().subscribe((dado: QuestionMultipleChoice) => {
       this.id = dado.id;
       this.statement = dado.statement;
-      this.idImages = dado.idImages[0],
+      this.images = dado.images,
       this.alternativeA = dado.alternativeA;
       this.alternativeB = dado.alternativeB;
       this.alternativeC = dado.alternativeC;
@@ -56,15 +56,10 @@ export class QuestionComponent implements OnInit {
       this.questionService.setAlternativeD(dado.alternativeD);
       this.questionService.setAlternativeE(dado.alternativeE);
 
-      if(dado.IdImages[0]) {
-        this.questionService.getImages(dado.idImages[0]).subscribe(
-          (response: any) => {
-            this.images = 'data:image/jpeg;base64,' + response.imagem;
-          },
-          (error) => {
-            console.error('Erro ao buscar a imagem:', error);
-          }
-        );
+      if(dado.images) {
+        this.images = dado.images.map(response => {
+          return 'data:image/jpeg;base64,' + response.imagem;
+        });
       }
     });
 
@@ -78,6 +73,13 @@ export class QuestionComponent implements OnInit {
         this.route.navigate(['client/quizz/resposta']);
       }
     );
+  }
+
+  onKeydown(event: KeyboardEvent, index: number) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.goToSlide(index);
+    }
   }
 
   goToSlide(index: number): void {
