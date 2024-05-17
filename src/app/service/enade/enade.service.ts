@@ -59,7 +59,7 @@ export class EnadeService {
     return this.alternativeE;
   }
 
-   setAnswer(data: any) {
+  setAnswer(data: any) {
     this.answer = data;
   }
 

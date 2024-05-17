@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -74,9 +75,16 @@ export class EnadeComponent {
     this.enadeService.answerEnade(this.id, this.formulario.value).subscribe(
       (data: any) => {
         this.enadeService.setAnswer(data);
-        this.route.navigate(['client/quizz/resposta']);
+        this.route.navigate(['client/enade/resposta']);
       }
     );
+  }
+
+  onKeydown(event: KeyboardEvent, index: number) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.goToSlide(index);
+    }
   }
 
   goToSlide(index: number): void {
