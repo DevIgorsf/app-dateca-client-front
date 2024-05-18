@@ -76,6 +76,9 @@ export class EnadeComponent {
       (data: any) => {
         this.enadeService.setAnswer(data);
         this.route.navigate(['client/enade/resposta']);
+      },
+      (error: any) => {
+        console.error('Ocorreu um erro ao responder ao Enade:', error);
       }
     );
   }
