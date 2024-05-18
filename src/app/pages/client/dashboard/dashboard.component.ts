@@ -20,7 +20,6 @@ export class DashboardComponent implements OnInit {
     this.studentService.rankingStudent().subscribe(
       (response) => {
         this.rankingStudents = response;
-        console.log(this.rankingStudents)
       }
     )
   }

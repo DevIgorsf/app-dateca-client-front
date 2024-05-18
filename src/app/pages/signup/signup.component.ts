@@ -29,11 +29,9 @@ export class SignupComponent {
     if (this.alunoForm.valid) {
       this.cadastroService.cadastrar(this.alunoForm.value).subscribe(
         (response) => {
-          console.log(response);
           this.router.navigate(['client/dashboard']);
         },
         (error) => {
-          console.log(error)
           alert('Não foi possível fazer o cadastro, tente mais tarde');
         }
       );

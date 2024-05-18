@@ -32,11 +32,9 @@ export class ProfileComponent {
     if (this.alunoForm.valid) {
       this.studentService.updateStudent(this.alunoForm.value).subscribe(
         (response) => {
-          console.log(response);
           this.router.navigate(['client/dashboard']);
         },
         (error) => {
-          console.log(error)
           alert('Não foi possível fazer o cadastro, tente mais tarde');
         }
       );
