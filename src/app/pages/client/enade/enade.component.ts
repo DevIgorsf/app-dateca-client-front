@@ -66,6 +66,9 @@ export class EnadeComponent {
           return 'data:image/jpeg;base64,' + response.imagem;
         });
       }
+    },
+    (error: any) => {
+      console.error('Ocorreu um erro ao responder ao Enade:', error);
     });
 
     
