@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { EnadeWithImage } from 'src/app/interfaces/EnadeWithImage';
 import { environment } from 'src/environments/environment';
 
 const API = environment.ApiUrl;
@@ -94,8 +95,8 @@ export class EnadeService {
     this.alternativeE = data;
   }
 
-  getEnadeAleatoria(): Observable<any> {
-    return this.http.get(`${API}/enade/aluno`);
+  getEnadeAleatoria(): Observable<EnadeWithImage> {
+    return this.http.get<EnadeWithImage>(`${API}/enade/aluno`);
   }
 
   getImages(idImages: any): Observable<any> {

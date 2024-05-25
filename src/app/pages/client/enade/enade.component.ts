@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { EnadeWithImage } from 'src/app/interfaces/EnadeWithImage';
@@ -10,7 +10,7 @@ import { EnadeService } from 'src/app/service/enade/enade.service';
   templateUrl: './enade.component.html',
   styleUrls: ['./enade.component.scss']
 })
-export class EnadeComponent {
+export class EnadeComponent implements OnInit {
   formulario: FormGroup;
   dado: any;
   images:any;
@@ -39,39 +39,43 @@ export class EnadeComponent {
     });
   }
 
-  ngOnInit() {
-    this.enadeService.getEnadeAleatoria().subscribe((dado: EnadeWithImage) => {
-      this.id = dado.id;
-      this.year = dado.year;
-      this.number = dado.number;
-      this.statement = dado.statement;
-      this.alternativeA = dado.alternativeA;
-      this.alternativeB = dado.alternativeB;
-      this.alternativeC = dado.alternativeC;
-      this.alternativeD = dado.alternativeD;
-      this.alternativeE = dado.alternativeE;
-      this.images = dado.images,
+  ngOnInit(): void {
+    this.loadEnade();
+  }
 
-      this.enadeService.setYear(dado.year);
-      this.enadeService.setNumber(dado.number);
-      this.enadeService.setStatement(dado.statement);
-      this.enadeService.setAlternativeA(dado.alternativeA);
-      this.enadeService.setAlternativeB(dado.alternativeB);
-      this.enadeService.setAlternativeC(dado.alternativeC);
-      this.enadeService.setAlternativeD(dado.alternativeD);
-      this.enadeService.setAlternativeE(dado.alternativeE);
+  loadEnade() {
+    this.enadeService.getEnadeAleatoria().subscribe(
+      (dado: EnadeWithImage) => {
+        this.id = dado.id;
+        this.year = dado.year;
+        this.number = dado.number;
+        this.statement = dado.statement;
+        this.alternativeA = dado.alternativeA;
+        this.alternativeB = dado.alternativeB;
+        this.alternativeC = dado.alternativeC;
+        this.alternativeD = dado.alternativeD;
+        this.alternativeE = dado.alternativeE;
+        this.images = dado.images;
 
-      if(dado.images.length > 0) {
-        this.images = dado.images.map(response => {
-          return 'data:image/jpeg;base64,' + response.imagem;
-        });
+        this.enadeService.setYear(dado.year);
+        this.enadeService.setNumber(dado.number);
+        this.enadeService.setStatement(dado.statement);
+        this.enadeService.setAlternativeA(dado.alternativeA);
+        this.enadeService.setAlternativeB(dado.alternativeB);
+        this.enadeService.setAlternativeC(dado.alternativeC);
+        this.enadeService.setAlternativeD(dado.alternativeD);
+        this.enadeService.setAlternativeE(dado.alternativeE);
+
+        if(dado.images) {
+          this.images = dado.images.map(response => {
+            return 'data:image/jpeg;base64,' + response.imagem;
+          });
+        }
+      },
+      (error: any) => {
+        console.error('Ocorreu um erro ao responder ao Enade:', error);
       }
-    },
-    (error: any) => {
-      console.error('Ocorreu um erro ao responder ao Enade:', error);
-    });
-
-    
+    );
   }
 
   answerEnade() {
