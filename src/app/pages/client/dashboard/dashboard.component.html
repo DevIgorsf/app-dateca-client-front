@@ -57,7 +57,7 @@
         <mat-list-item *ngFor="let student of rankingStudents; let i = index" role="listitem">
           <div class="dashboard__list">
             <div class="col-2">
-              #{{ i + 1 }} <!-- Índice do Angular é 0-based, mas você quer começar em 1 -->
+              #{{ student.index + 1 }} <!-- Índice do Angular é 0-based, mas você quer começar em 1 -->
             </div>
             <div class="col-8">
               {{ student.student.name }} <!-- Substitua 'name' pelo atributo apropriado do estudante -->
