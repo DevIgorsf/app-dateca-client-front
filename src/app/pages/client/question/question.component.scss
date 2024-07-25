@@ -49,37 +49,32 @@
   }
 }
 
+.slides {
+  display: flex;
+  overflow-x: hidden;
+}
+
+.slide__image {
+  max-width: 100%;
+  max-height: 300px;
+  height: auto;
+  display: block; 
+  margin: 0 auto; 
+
+  &--hidden {
+    display: none;
+  }
+}
+
 .carousel {
   display: flex;
   justify-content: space-around;
   align-items: center;
   width: 100%;
 
-  .slides {
-    display: flex;
-    overflow-x: hidden;
-  }
-
-  .slide {
-    flex-shrink: 0;
-    margin: 0 10px;
-
-    &__image {
-      max-width: 100%;
-      max-height: 300px;
-      height: auto;
-      display: block;
-      margin: 0 auto;
-
-      &--hidden {
-        display: none;
-      }
-    }
-  }
-
   &__button {
     padding: 10px;
-    color: #fff;
+    color: #FFF;
     background: none;
     border: none;
     cursor: pointer;
@@ -90,13 +85,13 @@
     }
   }
 
-  .indicators {
+  &__indicator {
     display: flex;
     width: 100%;
     justify-content: center;
     margin-top: 10px;
 
-    .indicator {
+    & > .indicator {
       width: 10px;
       height: 10px;
       border-radius: 50%;
@@ -110,6 +105,7 @@
     }
   }
 }
+
 
 .form-group {
   display: flex;
