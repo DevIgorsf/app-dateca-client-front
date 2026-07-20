@@ -15,7 +15,7 @@
       [class.qpage__result--wrong]="answer.answer !== answer.answerCorrect">
       <mat-icon
         aria-hidden="false"
-        [fontIcon]="answer.answer === answer.answerCorrect ? 'check_circle' : 'cancel'"></mat-icon>
+      [fontIcon]="answer.answer === answer.answerCorrect ? 'check_circle' : 'cancel'"></mat-icon>
       <span>{{ answer.answer === answer.answerCorrect ? 'Você acertou!' : 'Você errou essa questão' }}</span>
     </div>
 
@@ -28,8 +28,12 @@
         [class.choice--wrong]="answer.answer === 'A' && answer.answer !== answer.answerCorrect">
         <span class="choice__letter">A</span>
         <span class="choice__text">{{ alternativeA }}</span>
-        <mat-icon *ngIf="answer.answerCorrect === 'A'" class="choice__icon--correct" aria-hidden="false" fontIcon="check_circle"></mat-icon>
-        <mat-icon *ngIf="answer.answer === 'A' && answer.answer !== answer.answerCorrect" class="choice__icon--wrong" aria-hidden="false" fontIcon="cancel"></mat-icon>
+        @if (answer.answerCorrect === 'A') {
+          <mat-icon class="choice__icon--correct" aria-hidden="false" fontIcon="check_circle"></mat-icon>
+        }
+        @if (answer.answer === 'A' && answer.answer !== answer.answerCorrect) {
+          <mat-icon class="choice__icon--wrong" aria-hidden="false" fontIcon="cancel"></mat-icon>
+        }
       </div>
 
       <div
@@ -38,8 +42,12 @@
         [class.choice--wrong]="answer.answer === 'B' && answer.answer !== answer.answerCorrect">
         <span class="choice__letter">B</span>
         <span class="choice__text">{{ alternativeB }}</span>
-        <mat-icon *ngIf="answer.answerCorrect === 'B'" class="choice__icon--correct" aria-hidden="false" fontIcon="check_circle"></mat-icon>
-        <mat-icon *ngIf="answer.answer === 'B' && answer.answer !== answer.answerCorrect" class="choice__icon--wrong" aria-hidden="false" fontIcon="cancel"></mat-icon>
+        @if (answer.answerCorrect === 'B') {
+          <mat-icon class="choice__icon--correct" aria-hidden="false" fontIcon="check_circle"></mat-icon>
+        }
+        @if (answer.answer === 'B' && answer.answer !== answer.answerCorrect) {
+          <mat-icon class="choice__icon--wrong" aria-hidden="false" fontIcon="cancel"></mat-icon>
+        }
       </div>
 
       <div
@@ -48,8 +56,12 @@
         [class.choice--wrong]="answer.answer === 'C' && answer.answer !== answer.answerCorrect">
         <span class="choice__letter">C</span>
         <span class="choice__text">{{ alternativeC }}</span>
-        <mat-icon *ngIf="answer.answerCorrect === 'C'" class="choice__icon--correct" aria-hidden="false" fontIcon="check_circle"></mat-icon>
-        <mat-icon *ngIf="answer.answer === 'C' && answer.answer !== answer.answerCorrect" class="choice__icon--wrong" aria-hidden="false" fontIcon="cancel"></mat-icon>
+        @if (answer.answerCorrect === 'C') {
+          <mat-icon class="choice__icon--correct" aria-hidden="false" fontIcon="check_circle"></mat-icon>
+        }
+        @if (answer.answer === 'C' && answer.answer !== answer.answerCorrect) {
+          <mat-icon class="choice__icon--wrong" aria-hidden="false" fontIcon="cancel"></mat-icon>
+        }
       </div>
 
       <div
@@ -58,8 +70,12 @@
         [class.choice--wrong]="answer.answer === 'D' && answer.answer !== answer.answerCorrect">
         <span class="choice__letter">D</span>
         <span class="choice__text">{{ alternativeD }}</span>
-        <mat-icon *ngIf="answer.answerCorrect === 'D'" class="choice__icon--correct" aria-hidden="false" fontIcon="check_circle"></mat-icon>
-        <mat-icon *ngIf="answer.answer === 'D' && answer.answer !== answer.answerCorrect" class="choice__icon--wrong" aria-hidden="false" fontIcon="cancel"></mat-icon>
+        @if (answer.answerCorrect === 'D') {
+          <mat-icon class="choice__icon--correct" aria-hidden="false" fontIcon="check_circle"></mat-icon>
+        }
+        @if (answer.answer === 'D' && answer.answer !== answer.answerCorrect) {
+          <mat-icon class="choice__icon--wrong" aria-hidden="false" fontIcon="cancel"></mat-icon>
+        }
       </div>
 
       <div
@@ -68,8 +84,12 @@
         [class.choice--wrong]="answer.answer === 'E' && answer.answer !== answer.answerCorrect">
         <span class="choice__letter">E</span>
         <span class="choice__text">{{ alternativeE }}</span>
-        <mat-icon *ngIf="answer.answerCorrect === 'E'" class="choice__icon--correct" aria-hidden="false" fontIcon="check_circle"></mat-icon>
-        <mat-icon *ngIf="answer.answer === 'E' && answer.answer !== answer.answerCorrect" class="choice__icon--wrong" aria-hidden="false" fontIcon="cancel"></mat-icon>
+        @if (answer.answerCorrect === 'E') {
+          <mat-icon class="choice__icon--correct" aria-hidden="false" fontIcon="check_circle"></mat-icon>
+        }
+        @if (answer.answer === 'E' && answer.answer !== answer.answerCorrect) {
+          <mat-icon class="choice__icon--wrong" aria-hidden="false" fontIcon="cancel"></mat-icon>
+        }
       </div>
     </div>
 

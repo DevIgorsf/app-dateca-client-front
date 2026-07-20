@@ -41,24 +41,35 @@
         <a class="dashboard__panel-link" routerLink="/client/pontuacao">Ver tudo</a>
       </div>
       <mat-card-content>
-        <div
-          class="dashboard__row"
-          *ngFor="let entry of rankingStudents"
-          [class.dashboard__row--you]="entry.isCurrentUser">
-          <div class="dashboard__position">
-            <span *ngIf="entry.position === 1">🥇</span>
-            <span *ngIf="entry.position === 2">🥈</span>
-            <span *ngIf="entry.position === 3">🥉</span>
-            <span *ngIf="entry.position > 3">#{{ entry.position }}</span>
+        @for (entry of rankingStudents; track entry) {
+          <div
+            class="dashboard__row"
+            [class.dashboard__row--you]="entry.isCurrentUser">
+            <div class="dashboard__position">
+              @if (entry.position === 1) {
+                <span>🥇</span>
+              }
+              @if (entry.position === 2) {
+                <span>🥈</span>
+              }
+              @if (entry.position === 3) {
+                <span>🥉</span>
+              }
+              @if (entry.position > 3) {
+                <span>#{{ entry.position }}</span>
+              }
+            </div>
+            <div class="dashboard__avatar" [style.background]="entry.color">{{ entry.initials }}</div>
+            <div class="dashboard__name">{{ entry.isCurrentUser ? 'Você' : entry.name }}</div>
+            <div class="dashboard__points">{{ entry.points }} pts</div>
           </div>
-          <div class="dashboard__avatar" [style.background]="entry.color">{{ entry.initials }}</div>
-          <div class="dashboard__name">{{ entry.isCurrentUser ? 'Você' : entry.name }}</div>
-          <div class="dashboard__points">{{ entry.points }} pts</div>
-        </div>
+        }
 
-        <div class="dashboard__empty" *ngIf="!loading && rankingStudents.length === 0">
-          Nenhum participante no ranking ainda.
-        </div>
+        @if (!loading && rankingStudents.length === 0) {
+          <div class="dashboard__empty">
+            Nenhum participante no ranking ainda.
+          </div>
+        }
       </mat-card-content>
     </mat-card>
 
@@ -67,36 +78,38 @@
         <h2>Pódio</h2>
       </div>
       <mat-card-content>
-        <div class="podium podium--compact" *ngIf="hasPodium">
-          <div class="podium__place podium__place--second">
-            <div class="podium__avatar" [style.background]="second!.color">{{ second!.initials }}</div>
-            <div class="podium__name">{{ second!.isCurrentUser ? 'Você' : second!.name }}</div>
-            <div class="podium__step podium__step--second">
-              <span class="podium__medal">🥈</span>
+        @if (hasPodium) {
+          <div class="podium podium--compact">
+            <div class="podium__place podium__place--second">
+              <div class="podium__avatar" [style.background]="second!.color">{{ second!.initials }}</div>
+              <div class="podium__name">{{ second!.isCurrentUser ? 'Você' : second!.name }}</div>
+              <div class="podium__step podium__step--second">
+                <span class="podium__medal">🥈</span>
+              </div>
+            </div>
+            <div class="podium__place podium__place--first">
+              <div class="podium__crown">👑</div>
+              <div class="podium__avatar podium__avatar--large" [style.background]="first!.color">{{ first!.initials }}</div>
+              <div class="podium__name">{{ first!.isCurrentUser ? 'Você' : first!.name }}</div>
+              <div class="podium__step podium__step--first">
+                <span class="podium__medal">🥇</span>
+              </div>
+            </div>
+            <div class="podium__place podium__place--third">
+              <div class="podium__avatar" [style.background]="third!.color">{{ third!.initials }}</div>
+              <div class="podium__name">{{ third!.isCurrentUser ? 'Você' : third!.name }}</div>
+              <div class="podium__step podium__step--third">
+                <span class="podium__medal">🥉</span>
+              </div>
             </div>
           </div>
+        }
 
-          <div class="podium__place podium__place--first">
-            <div class="podium__crown">👑</div>
-            <div class="podium__avatar podium__avatar--large" [style.background]="first!.color">{{ first!.initials }}</div>
-            <div class="podium__name">{{ first!.isCurrentUser ? 'Você' : first!.name }}</div>
-            <div class="podium__step podium__step--first">
-              <span class="podium__medal">🥇</span>
-            </div>
+        @if (!hasPodium) {
+          <div class="dashboard__empty">
+            O pódio aparece assim que houver ao menos 3 participantes.
           </div>
-
-          <div class="podium__place podium__place--third">
-            <div class="podium__avatar" [style.background]="third!.color">{{ third!.initials }}</div>
-            <div class="podium__name">{{ third!.isCurrentUser ? 'Você' : third!.name }}</div>
-            <div class="podium__step podium__step--third">
-              <span class="podium__medal">🥉</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="dashboard__empty" *ngIf="!hasPodium">
-          O pódio aparece assim que houver ao menos 3 participantes.
-        </div>
+        }
       </mat-card-content>
     </mat-card>
   </div>

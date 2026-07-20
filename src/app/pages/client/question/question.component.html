@@ -7,35 +7,43 @@
   </div>
 
   <mat-card class="qpage__card">
-    <div class="qpage__carousel" *ngIf="images && images.length > 0">
-      <button class="qpage__carousel-btn" type="button" (click)="prevSlide()" aria-label="Imagem anterior">
-        <mat-icon aria-hidden="false" fontIcon="chevron_left"></mat-icon>
-      </button>
-      <div class="qpage__slides">
-        <div *ngFor="let image of images; let i = index">
-          <img
-            *ngIf="i === slideIndex"
-            class="qpage__slide-image"
-            [src]="image"
-            alt="Imagem {{ i + 1 }} de {{ images.length }}" />
+    @if (images && images.length > 0) {
+      <div class="qpage__carousel">
+        <button class="qpage__carousel-btn" type="button" (click)="prevSlide()" aria-label="Imagem anterior">
+          <mat-icon aria-hidden="false" fontIcon="chevron_left"></mat-icon>
+        </button>
+        <div class="qpage__slides">
+          @for (image of images; track image; let i = $index) {
+            <div>
+              @if (i === slideIndex) {
+                <img
+                  class="qpage__slide-image"
+                  [src]="image"
+                  alt="Imagem {{ i + 1 }} de {{ images.length }}" />
+              }
+            </div>
+          }
         </div>
+        <button class="qpage__carousel-btn" type="button" (click)="nextSlide()" aria-label="Próxima imagem">
+          <mat-icon aria-hidden="false" fontIcon="chevron_right"></mat-icon>
+        </button>
       </div>
-      <button class="qpage__carousel-btn" type="button" (click)="nextSlide()" aria-label="Próxima imagem">
-        <mat-icon aria-hidden="false" fontIcon="chevron_right"></mat-icon>
-      </button>
-    </div>
+    }
 
-    <div class="qpage__indicators" *ngIf="images && images.length > 1">
-      <button
-        class="qpage__indicator"
-        type="button"
-        *ngFor="let image of images; let i = index"
-        [class.qpage__indicator--active]="i === slideIndex"
-        [attr.aria-label]="'Ir para imagem ' + (i + 1)"
-        (click)="goToSlide(i)"
-        (keydown)="onKeydown($event, i)">
-      </button>
-    </div>
+    @if (images && images.length > 1) {
+      <div class="qpage__indicators">
+        @for (image of images; track image; let i = $index) {
+          <button
+            class="qpage__indicator"
+            type="button"
+            [class.qpage__indicator--active]="i === slideIndex"
+            [attr.aria-label]="'Ir para imagem ' + (i + 1)"
+            (click)="goToSlide(i)"
+            (keydown)="onKeydown($event, i)">
+          </button>
+        }
+      </div>
+    }
 
     <p class="qpage__statement">{{ statement }}</p>
 

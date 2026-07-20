@@ -14,120 +14,148 @@
       placeholder="Buscar usuários por nome ou matrícula..."
       [ngModel]="search"
       (ngModelChange)="onSearchChange($event)">
-    <mat-icon
-      *ngIf="searching"
-      class="adicionar__search-spinner"
-      aria-hidden="false"
+    @if (searching) {
+      <mat-icon
+        class="adicionar__search-spinner"
+        aria-hidden="false"
       fontIcon="autorenew"></mat-icon>
+    }
   </div>
 
-  <mat-card class="adicionar__card" *ngIf="search.trim().length >= 2">
-    <div class="adicionar__card-header">
-      <h2>Resultados da busca</h2>
-    </div>
-    <div class="adicionar__requests">
-      <div class="request" *ngFor="let user of searchResults">
-        <div class="request__avatar" [style.background]="getColor(user.name)">{{ getInitials(user.name) }}</div>
-        <div class="request__info">
-          <div class="request__name">{{ user.name }}</div>
-          <div class="request__points">Matrícula {{ user.registrationNumber }} · {{ user.friendsCount }} amigos</div>
-        </div>
-
-        <button
-          type="button"
-          class="adicionar__add-btn adicionar__add-btn--sm"
-          *ngIf="user.relationshipStatus === 'NONE'"
-          (click)="sendRequest(user)">
-          <mat-icon aria-hidden="false" fontIcon="person_add"></mat-icon>
-          Adicionar
-        </button>
-        <span class="adicionar__status-badge" *ngIf="user.relationshipStatus === 'PENDING_SENT'">Solicitação enviada</span>
-        <span class="adicionar__status-badge" *ngIf="user.relationshipStatus === 'PENDING_RECEIVED'">Te enviou um pedido</span>
-        <span class="adicionar__status-badge adicionar__status-badge--friend" *ngIf="user.relationshipStatus === 'FRIEND'">Amigos</span>
-        <span class="adicionar__status-badge" *ngIf="user.relationshipStatus === 'BLOCKED'">Bloqueado</span>
+  @if (search.trim().length >= 2) {
+    <mat-card class="adicionar__card">
+      <div class="adicionar__card-header">
+        <h2>Resultados da busca</h2>
       </div>
-
-      <div class="adicionar__empty" *ngIf="!searching && searchResults.length === 0">
-        Nenhum usuário encontrado.
+      <div class="adicionar__requests">
+        @for (user of searchResults; track user) {
+          <div class="request">
+            <div class="request__avatar" [style.background]="getColor(user.name)">{{ getInitials(user.name) }}</div>
+            <div class="request__info">
+              <div class="request__name">{{ user.name }}</div>
+              <div class="request__points">Matrícula {{ user.registrationNumber }} · {{ user.friendsCount }} amigos</div>
+            </div>
+            @if (user.relationshipStatus === 'NONE') {
+              <button
+                type="button"
+                class="adicionar__add-btn adicionar__add-btn--sm"
+                (click)="sendRequest(user)">
+                <mat-icon aria-hidden="false" fontIcon="person_add"></mat-icon>
+                Adicionar
+              </button>
+            }
+            @if (user.relationshipStatus === 'PENDING_SENT') {
+              <span class="adicionar__status-badge">Solicitação enviada</span>
+            }
+            @if (user.relationshipStatus === 'PENDING_RECEIVED') {
+              <span class="adicionar__status-badge">Te enviou um pedido</span>
+            }
+            @if (user.relationshipStatus === 'FRIEND') {
+              <span class="adicionar__status-badge adicionar__status-badge--friend">Amigos</span>
+            }
+            @if (user.relationshipStatus === 'BLOCKED') {
+              <span class="adicionar__status-badge">Bloqueado</span>
+            }
+          </div>
+        }
+        @if (!searching && searchResults.length === 0) {
+          <div class="adicionar__empty">
+            Nenhum usuário encontrado.
+          </div>
+        }
       </div>
-    </div>
-  </mat-card>
+    </mat-card>
+  }
 
-  <mat-card class="adicionar__card" *ngIf="!loadingRequests && friendRequests.length > 0">
-    <div class="adicionar__card-header">
-      <h2>Solicitações Recebidas</h2>
-      <span class="adicionar__badge">{{ friendRequests.length }}</span>
-    </div>
-    <div class="adicionar__requests">
-      <div class="request" *ngFor="let request of friendRequests">
-        <div class="request__avatar" [style.background]="getColor(request.requesterName)">{{ getInitials(request.requesterName) }}</div>
-        <div class="request__info">
-          <div class="request__name">{{ request.requesterName }}</div>
-        </div>
-        <button type="button" class="request__action request__action--accept" aria-label="Aceitar" (click)="acceptRequest(request)">
-          <mat-icon aria-hidden="false" fontIcon="check"></mat-icon>
-        </button>
-        <button type="button" class="request__action request__action--reject" aria-label="Recusar" (click)="declineRequest(request)">
-          <mat-icon aria-hidden="false" fontIcon="close"></mat-icon>
-        </button>
+  @if (!loadingRequests && friendRequests.length > 0) {
+    <mat-card class="adicionar__card">
+      <div class="adicionar__card-header">
+        <h2>Solicitações Recebidas</h2>
+        <span class="adicionar__badge">{{ friendRequests.length }}</span>
       </div>
-    </div>
-  </mat-card>
+      <div class="adicionar__requests">
+        @for (request of friendRequests; track request) {
+          <div class="request">
+            <div class="request__avatar" [style.background]="getColor(request.requesterName)">{{ getInitials(request.requesterName) }}</div>
+            <div class="request__info">
+              <div class="request__name">{{ request.requesterName }}</div>
+            </div>
+            <button type="button" class="request__action request__action--accept" aria-label="Aceitar" (click)="acceptRequest(request)">
+              <mat-icon aria-hidden="false" fontIcon="check"></mat-icon>
+            </button>
+            <button type="button" class="request__action request__action--reject" aria-label="Recusar" (click)="declineRequest(request)">
+              <mat-icon aria-hidden="false" fontIcon="close"></mat-icon>
+            </button>
+          </div>
+        }
+      </div>
+    </mat-card>
+  }
 
-  <mat-card class="adicionar__card" *ngIf="!loadingSentRequests && sentRequests.length > 0">
-    <div class="adicionar__card-header">
-      <h2>Solicitações Enviadas</h2>
-      <span class="adicionar__badge">{{ sentRequests.length }}</span>
-    </div>
-    <div class="adicionar__requests">
-      <div class="request" *ngFor="let request of sentRequests">
-        <div class="request__avatar" [style.background]="getColor(request.receiverName)">{{ getInitials(request.receiverName) }}</div>
-        <div class="request__info">
-          <div class="request__name">{{ request.receiverName }}</div>
-          <div class="request__points">Aguardando resposta</div>
-        </div>
-        <button type="button" class="adicionar__cancel-btn" (click)="cancelRequest(request)">
-          Cancelar
-        </button>
+  @if (!loadingSentRequests && sentRequests.length > 0) {
+    <mat-card class="adicionar__card">
+      <div class="adicionar__card-header">
+        <h2>Solicitações Enviadas</h2>
+        <span class="adicionar__badge">{{ sentRequests.length }}</span>
       </div>
-    </div>
-  </mat-card>
+      <div class="adicionar__requests">
+        @for (request of sentRequests; track request) {
+          <div class="request">
+            <div class="request__avatar" [style.background]="getColor(request.receiverName)">{{ getInitials(request.receiverName) }}</div>
+            <div class="request__info">
+              <div class="request__name">{{ request.receiverName }}</div>
+              <div class="request__points">Aguardando resposta</div>
+            </div>
+            <button type="button" class="adicionar__cancel-btn" (click)="cancelRequest(request)">
+              Cancelar
+            </button>
+          </div>
+        }
+      </div>
+    </mat-card>
+  }
 
   <div class="adicionar__friends-header">
     <h2>Seus Amigos ({{ friendsCount }})</h2>
   </div>
 
-  <div class="adicionar__loading" *ngIf="loadingFriends">
-    <mat-icon class="adicionar__loading-icon" aria-hidden="false" fontIcon="autorenew"></mat-icon>
-    <span>Carregando amigos...</span>
-  </div>
-
-  <div class="friends-grid" *ngIf="!loadingFriends">
-    <mat-card class="friend-card" *ngFor="let friend of friends">
-      <div class="friend-card__top">
-        <div class="friend-card__avatar-wrap">
-          <div class="friend-card__avatar" [style.background]="getColor(friend.name)">{{ getInitials(friend.name) }}</div>
-        </div>
-        <div class="friend-card__info">
-          <div class="friend-card__name">{{ friend.name }}</div>
-          <div class="friend-card__status">Amigos desde {{ friend.friendSince | date:'dd/MM/yyyy' }}</div>
-        </div>
-      </div>
-
-      <div class="friend-card__stats">
-        <div class="friend-card__stat">
-          <span class="friend-card__stat-label">XP</span>
-          <span class="friend-card__stat-value">{{ friend.points | number }}</span>
-        </div>
-        <div class="friend-card__stat friend-card__stat--ranking">
-          <span class="friend-card__stat-label">MATRÍCULA</span>
-          <span class="friend-card__stat-value">{{ friend.registrationNumber }}</span>
-        </div>
-      </div>
-    </mat-card>
-
-    <div class="adicionar__empty" *ngIf="friends.length === 0">
-      Você ainda não tem amigos adicionados.
+  @if (loadingFriends) {
+    <div class="adicionar__loading">
+      <mat-icon class="adicionar__loading-icon" aria-hidden="false" fontIcon="autorenew"></mat-icon>
+      <span>Carregando amigos...</span>
     </div>
-  </div>
+  }
+
+  @if (!loadingFriends) {
+    <div class="friends-grid">
+      @for (friend of friends; track friend) {
+        <mat-card class="friend-card">
+          <div class="friend-card__top">
+            <div class="friend-card__avatar-wrap">
+              <div class="friend-card__avatar" [style.background]="getColor(friend.name)">{{ getInitials(friend.name) }}</div>
+            </div>
+            <div class="friend-card__info">
+              <div class="friend-card__name">{{ friend.name }}</div>
+              <div class="friend-card__status">Amigos desde {{ friend.friendSince | date:'dd/MM/yyyy' }}</div>
+            </div>
+          </div>
+          <div class="friend-card__stats">
+            <div class="friend-card__stat">
+              <span class="friend-card__stat-label">XP</span>
+              <span class="friend-card__stat-value">{{ friend.points | number }}</span>
+            </div>
+            <div class="friend-card__stat friend-card__stat--ranking">
+              <span class="friend-card__stat-label">MATRÍCULA</span>
+              <span class="friend-card__stat-value">{{ friend.registrationNumber }}</span>
+            </div>
+          </div>
+        </mat-card>
+      }
+      @if (friends.length === 0) {
+        <div class="adicionar__empty">
+          Você ainda não tem amigos adicionados.
+        </div>
+      }
+    </div>
+  }
 </div>

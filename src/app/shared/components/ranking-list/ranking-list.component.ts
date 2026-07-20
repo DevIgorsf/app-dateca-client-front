@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatCardModule } from '@angular/material/card';
 import { RankingEntry } from 'src/app/shared/utils/ranking.util';
 
 @Component({
     selector: 'app-ranking-list',
-    imports: [CommonModule, MatCardModule],
+    imports: [MatCardModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './ranking-list.component.html',
     styleUrls: ['./ranking-list.component.scss']

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, computed, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -16,15 +16,14 @@ const FRIENDS_PAGE_SIZE = 100;
 @Component({
     selector: 'app-pontuacao',
     imports: [
-        CommonModule,
-        RouterModule,
-        MatIconModule,
-        MatTabsModule,
-        RankingListComponent,
-        RankingSkeletonComponent,
-        EmptyStateComponent,
-        MyPositionCardComponent,
-    ],
+    RouterModule,
+    MatIconModule,
+    MatTabsModule,
+    RankingListComponent,
+    RankingSkeletonComponent,
+    EmptyStateComponent,
+    MyPositionCardComponent
+],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './pontuacao.component.html',
     styleUrls: ['./pontuacao.component.scss']
