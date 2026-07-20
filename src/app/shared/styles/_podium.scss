@@ -1,0 +1,144 @@
+.podium {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 24px;
+  background: linear-gradient(135deg, #1f2430, #12151d);
+  border-radius: 16px;
+  padding: 32px 24px 0;
+}
+
+.podium__place {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 140px;
+  color: #fff;
+}
+
+.podium__crown {
+  font-size: 1.6rem;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.podium__avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #fff;
+  margin-bottom: 8px;
+  border: 3px solid rgba(255, 255, 255, .15);
+  flex-shrink: 0;
+}
+
+.podium__avatar--large {
+  width: 76px;
+  height: 76px;
+  font-size: 1.4rem;
+  border-color: #ffd54f;
+}
+
+.podium__name {
+  font-weight: 600;
+  max-width: 130px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.podium__points {
+  font-size: .8rem;
+  color: #ffd54f;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.podium__step {
+  width: 100%;
+  border-radius: 10px 10px 0 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 8px;
+}
+
+.podium__medal {
+  font-size: 1.5rem;
+}
+
+.podium__step--first {
+  height: 96px;
+  background: linear-gradient(180deg, #ffd54f, #c9a227);
+}
+
+.podium__step--second {
+  height: 68px;
+  background: linear-gradient(180deg, #b0bec5, #78909c);
+}
+
+.podium__step--third {
+  height: 48px;
+  background: linear-gradient(180deg, #d7a06a, #a3673a);
+}
+
+.podium--compact {
+  gap: 16px;
+  padding: 24px 16px 0;
+  border-radius: 14px;
+
+  .podium__place {
+    width: 100px;
+  }
+
+  .podium__crown {
+    font-size: 1.3rem;
+    margin-bottom: 4px;
+  }
+
+  .podium__avatar {
+    width: 44px;
+    height: 44px;
+    font-size: .9rem;
+    margin-bottom: 6px;
+    border-width: 2px;
+  }
+
+  .podium__avatar--large {
+    width: 58px;
+    height: 58px;
+    font-size: 1.05rem;
+  }
+
+  .podium__name {
+    font-size: .8rem;
+    max-width: 90px;
+    margin-bottom: 8px;
+  }
+
+  .podium__points {
+    display: none;
+  }
+
+  .podium__medal {
+    font-size: 1.2rem;
+  }
+
+  .podium__step--first {
+    height: 68px;
+  }
+
+  .podium__step--second {
+    height: 48px;
+  }
+
+  .podium__step--third {
+    height: 34px;
+  }
+}

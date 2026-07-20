@@ -1,0 +1,91 @@
+<aside class="sidebar" [class.sidebar--collapsed]="collapsed">
+  <div class="sidebar__brand">
+    <a class="sidebar__brand-link" routerLink="/client/dashboard">
+      <img class="sidebar__logo" src="assets/images/DATECA.png" alt="DATECA">
+      <span class="sidebar__brand-name" *ngIf="!collapsed">DATECA</span>
+    </a>
+    <button
+      type="button"
+      class="sidebar__toggle"
+      (click)="toggle()"
+      [attr.aria-label]="collapsed ? 'Expandir menu' : 'Recolher menu'"
+      [matTooltip]="collapsed ? 'Expandir menu' : 'Recolher menu'"
+      matTooltipPosition="right">
+      <mat-icon aria-hidden="false" [fontIcon]="collapsed ? 'chevron_right' : 'chevron_left'"></mat-icon>
+    </button>
+  </div>
+
+  <nav class="sidebar__nav">
+    <a
+      class="sidebar__link"
+      routerLink="/client/dashboard"
+      routerLinkActive="sidebar__link--active"
+      [matTooltip]="collapsed ? 'Dashboard' : ''"
+      matTooltipPosition="right">
+      <mat-icon aria-hidden="false" fontIcon="dashboard"></mat-icon>
+      <span *ngIf="!collapsed">Dashboard</span>
+    </a>
+
+    <a
+      class="sidebar__link"
+      routerLink="/client/enade"
+      routerLinkActive="sidebar__link--active"
+      [matTooltip]="collapsed ? 'Enade' : ''"
+      matTooltipPosition="right">
+      <mat-icon aria-hidden="false" fontIcon="menu_book"></mat-icon>
+      <span *ngIf="!collapsed">Enade</span>
+    </a>
+
+    <a
+      class="sidebar__link"
+      routerLink="/client/quizz"
+      routerLinkActive="sidebar__link--active"
+      [matTooltip]="collapsed ? 'Quiz' : ''"
+      matTooltipPosition="right">
+      <mat-icon aria-hidden="false" fontIcon="quiz"></mat-icon>
+      <span *ngIf="!collapsed">Quiz</span>
+    </a>
+
+    <a
+      class="sidebar__link"
+      routerLink="/client/adicionar"
+      routerLinkActive="sidebar__link--active"
+      [matTooltip]="collapsed ? 'Adicionar amigo' : ''"
+      matTooltipPosition="right">
+      <mat-icon aria-hidden="false" fontIcon="person_add"></mat-icon>
+      <span *ngIf="!collapsed">Adicionar amigo</span>
+    </a>
+
+    <a
+      class="sidebar__link"
+      routerLink="/client/pontuacao"
+      routerLinkActive="sidebar__link--active"
+      [matTooltip]="collapsed ? 'Ranking' : ''"
+      matTooltipPosition="right">
+      <mat-icon aria-hidden="false" fontIcon="leaderboard"></mat-icon>
+      <span *ngIf="!collapsed">Ranking</span>
+    </a>
+
+    <a
+      class="sidebar__link"
+      routerLink="/client/perfil"
+      routerLinkActive="sidebar__link--active"
+      [matTooltip]="collapsed ? 'Perfil' : ''"
+      matTooltipPosition="right">
+      <mat-icon aria-hidden="false" fontIcon="person"></mat-icon>
+      <span *ngIf="!collapsed">Perfil</span>
+    </a>
+  </nav>
+
+  <div class="sidebar__footer">
+    <button
+      type="button"
+      class="sidebar__link sidebar__logout"
+      (click)="logout()"
+      [matTooltip]="collapsed ? 'Sair' : ''"
+      matTooltipPosition="right">
+      <mat-icon aria-hidden="false" fontIcon="logout"></mat-icon>
+      <span *ngIf="!collapsed">Sair</span>
+    </button>
+  </div>
+</aside>

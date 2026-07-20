@@ -1,133 +1,83 @@
-<div class="question__header">
-  <a role="button" routerLink="/client/dashboard">
-    <mat-icon aria-hidden="false" fontIcon="arrow_back"></mat-icon>
-  </a>
-</div>
-<div class="question">
-  <div class="question__button">
-    <button type="button" (click)="answerQuestion()" [disabled]="!formulario.valid">
-      <mat-icon aria-hidden="false" fontIcon="check"></mat-icon>
-      <p>Responder</p>
-    </button>
+<div class="qpage">
+  <div class="qpage__header">
+    <a class="qpage__back" role="button" routerLink="/client/dashboard" aria-label="Voltar">
+      <mat-icon aria-hidden="false" fontIcon="arrow_back"></mat-icon>
+    </a>
+    <h1 class="qpage__title">Quiz</h1>
   </div>
-  
-  <div class="carousel" *ngIf="images && images.length > 0">
-    <button class="carousel__button" (click)="prevSlide()"><i class="bi bi-caret-left-fill"></i></button>
-    <div class="slides">
-      <div *ngFor="let image of images; let i = index" class="slide" >
-        <img [ngClass]="{'slide__image': i === slideIndex, 'slide__image--hidden': i !== slideIndex}" [src]="image" alt="Imagem {{ i + 1 }} de {{ images.length }}" />
+
+  <mat-card class="qpage__card">
+    <div class="qpage__carousel" *ngIf="images && images.length > 0">
+      <button class="qpage__carousel-btn" type="button" (click)="prevSlide()" aria-label="Imagem anterior">
+        <mat-icon aria-hidden="false" fontIcon="chevron_left"></mat-icon>
+      </button>
+      <div class="qpage__slides">
+        <div *ngFor="let image of images; let i = index">
+          <img
+            *ngIf="i === slideIndex"
+            class="qpage__slide-image"
+            [src]="image"
+            alt="Imagem {{ i + 1 }} de {{ images.length }}" />
+        </div>
       </div>
-    </div>
-    <button class="carousel__button" (click)="nextSlide()"><i class="bi bi-caret-right-fill"></i></button>
-  </div>
-  
-  <div class="indicators">
-    <span class="indicator" 
-      *ngFor="let image of images; let i = index" 
-      [class.active]="i === slideIndex" 
-      tabindex="0"
-      (click)="goToSlide(i)"
-      (keydown)="onKeydown($event, i)">
-    </span>
-  </div>
-  
-  <div class="question__enunciado">
-    <p>
-      Enunciado: {{ statement }}
-    </p>
-  </div>
-  <form [formGroup]="formulario">
-    <mat-radio-group aria-label="Select an option" formControlName="correctAnswer">
-      <div class="form-group">
-        <mat-radio-button
-          class="form-group__radio"
-          value="A">
-        </mat-radio-button>
-        <label
-          class="form-group__label"
-          for="alternativeA">
-          A
-        </label>
-
-        <p>
-          {{ alternativeA }}
-        </p>
-
-      </div>
-
-      <div class="form-group">
-        <mat-radio-button
-          class="form-group__radio"
-          value="B">
-        </mat-radio-button>
-        <label
-          class="form-group__label"
-          for="alternativeB">
-          B
-        </label>
-
-        <p>
-          {{ alternativeB }}
-        </p>
-
-      </div>
-
-      <div class="form-group">
-        <mat-radio-button
-          class="form-group__radio"
-          value="C">
-        </mat-radio-button>
-        <label
-          class="form-group__label"
-          for="alternativeC">
-          C
-        </label>
-
-        <p>
-          {{ alternativeC }}
-        </p>
-
-      </div>
-
-      <div class="form-group">
-        <mat-radio-button
-          class="form-group__radio"
-          value="D">
-        </mat-radio-button>
-        <label
-          class="form-group__label"
-          for="alternativeD">
-          D
-        </label>
-
-        <p>
-          {{ alternativeD }}
-        </p>
-
-      </div>
-
-      <div class="form-group">
-        <mat-radio-button
-          class="form-group__radio"
-          value="E">
-        </mat-radio-button>
-
-        <p class="form-group__label">
-          E
-        </p>
-
-        <p class="form-group__texto">
-          {{ alternativeE }}
-        </p>
-
-      </div>
-    </mat-radio-group>
-
-    <div class="question__button">
-      <button type="button" (click)="answerQuestion()" [disabled]="!formulario.valid">
-        <mat-icon aria-hidden="false" fontIcon="check"></mat-icon>
-        <p>Responder</p>
+      <button class="qpage__carousel-btn" type="button" (click)="nextSlide()" aria-label="Próxima imagem">
+        <mat-icon aria-hidden="false" fontIcon="chevron_right"></mat-icon>
       </button>
     </div>
-  </form>
+
+    <div class="qpage__indicators" *ngIf="images && images.length > 1">
+      <button
+        class="qpage__indicator"
+        type="button"
+        *ngFor="let image of images; let i = index"
+        [class.qpage__indicator--active]="i === slideIndex"
+        [attr.aria-label]="'Ir para imagem ' + (i + 1)"
+        (click)="goToSlide(i)"
+        (keydown)="onKeydown($event, i)">
+      </button>
+    </div>
+
+    <p class="qpage__statement">{{ statement }}</p>
+
+    <form [formGroup]="formulario">
+      <mat-radio-group aria-label="Selecione uma alternativa" formControlName="correctAnswer" class="qpage__choices">
+        <label class="choice" [class.choice--selected]="formulario.value.correctAnswer === 'A'">
+          <mat-radio-button value="A"></mat-radio-button>
+          <span class="choice__letter">A</span>
+          <span class="choice__text">{{ alternativeA }}</span>
+        </label>
+
+        <label class="choice" [class.choice--selected]="formulario.value.correctAnswer === 'B'">
+          <mat-radio-button value="B"></mat-radio-button>
+          <span class="choice__letter">B</span>
+          <span class="choice__text">{{ alternativeB }}</span>
+        </label>
+
+        <label class="choice" [class.choice--selected]="formulario.value.correctAnswer === 'C'">
+          <mat-radio-button value="C"></mat-radio-button>
+          <span class="choice__letter">C</span>
+          <span class="choice__text">{{ alternativeC }}</span>
+        </label>
+
+        <label class="choice" [class.choice--selected]="formulario.value.correctAnswer === 'D'">
+          <mat-radio-button value="D"></mat-radio-button>
+          <span class="choice__letter">D</span>
+          <span class="choice__text">{{ alternativeD }}</span>
+        </label>
+
+        <label class="choice" [class.choice--selected]="formulario.value.correctAnswer === 'E'">
+          <mat-radio-button value="E"></mat-radio-button>
+          <span class="choice__letter">E</span>
+          <span class="choice__text">{{ alternativeE }}</span>
+        </label>
+      </mat-radio-group>
+
+      <div class="qpage__actions">
+        <button class="qpage__button" type="button" (click)="answerQuestion()" [disabled]="!formulario.valid">
+          <mat-icon aria-hidden="false" fontIcon="check"></mat-icon>
+          <span>Responder</span>
+        </button>
+      </div>
+    </form>
+  </mat-card>
 </div>

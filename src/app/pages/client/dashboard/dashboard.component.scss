@@ -1,94 +1,195 @@
+@import '../../../shared/styles/podium';
+
 .dashboard {
-  display: flex;
-  max-width: 100vw;
-  margin: 50px;
-  justify-content: space-around;
-  flex-wrap: wrap;
+  margin: 24px clamp(16px, 4vw, 64px) 48px;
 }
 
-.dashboard a {
+.dashboard__header {
+  margin-bottom: 24px;
+}
+
+.dashboard__title {
+  margin: 0 0 4px;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.dashboard__subtitle {
+  margin: 0;
+  color: #667085;
+  font-size: .9rem;
+}
+
+.dashboard__actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.action-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(16, 24, 40, .08);
   text-decoration: none;
+  color: #1d2433;
+  transition: transform .15s ease, box-shadow .15s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(16, 24, 40, .12);
+  }
 }
 
-.dashboard__card{
-  color: #fff;
-  text-align: center;
-}
-
-.dashboard__card mat-card-header{
-  display: flex;
-  justify-content: center;
-}
-
-.dashboard__card mat-icon{
-  font-size: 40px;
-  height: 40px;
-  width: 40px;
-}
-
-.dashboard__list {
-  display: flex;
-  flex-direction: row;
-}
-
-.dashboard__index {
-
-}
-
-.dashboard__name {
-
-}
-
-.dashboard__point {
-
-}
-
-.full-height {
-  height: 75%;
-}
-
-.podio-container {
-  display: flex;
-  justify-content: space-around;
-  height: 100%;
-  margin-top: 20px;
-}
-
-.podio-item {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  text-align: center;
-}
-
-.podio-icon {
-  align-self: center;
-  color: gold; // ou a cor desejada
-}
-
-.podio-position {
+.action-card__icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
-  font-weight: bold;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  flex-shrink: 0;
 }
 
-.podio-position-one {
-  background: yellow;
-  height: 70%;
-  width: 100px;
+.action-card__label {
+  font-weight: 600;
+  font-size: .95rem;
 }
 
-.podio-position-two {
-  background: yellow;
-  height: 50%;
-  width: 100px;
+.action-card--quiz .action-card__icon {
+  background: #e8f8ee;
+  color: #1aa053;
 }
 
-.podio-position-three {
-  background: yellow;
-  height: 30%;
-  width: 100px;
+.action-card--enade .action-card__icon {
+  background: #fff8e1;
+  color: #c9a227;
 }
 
+.action-card--adicionar .action-card__icon {
+  background: #fdecea;
+  color: #e53935;
+}
+
+.action-card--pontuacao .action-card__icon {
+  background: #e3f2fd;
+  color: #1e88e5;
+}
+
+.dashboard__panels {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+  align-items: start;
+}
+
+.dashboard__panel {
+  border-radius: 16px;
+}
+
+.dashboard__panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 16px 0;
+
+  h2 {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+}
+
+.dashboard__panel-link {
+  font-size: .8rem;
+  color: rgb(0, 119, 255);
+  text-decoration: none;
+  font-weight: 600;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.dashboard__row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 8px;
+  border-bottom: 1px solid #f0f0f0;
+  border-radius: 10px;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.dashboard__row--you {
+  background: #eaf3ff;
+  border-left: 3px solid rgb(0, 119, 255);
+}
+
+.dashboard__position {
+  width: 28px;
+  flex-shrink: 0;
+  text-align: center;
+  font-weight: 700;
+  color: #555;
+}
+
+.dashboard__avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: .7rem;
+  flex-shrink: 0;
+}
+
+.dashboard__name {
+  flex: 1;
+  min-width: 0;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dashboard__row--you .dashboard__name {
+  color: rgb(0, 119, 255);
+}
+
+.dashboard__points {
+  font-weight: 700;
+  font-size: .75rem;
+  color: #00a854;
+  background: #e6f7ec;
+  padding: 3px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.dashboard__empty {
+  text-align: center;
+  color: #888;
+  padding: 24px 0;
+}
+
+@media (max-width: 480px) {
+  .dashboard {
+    margin: 16px;
+  }
+
+  .dashboard__actions {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

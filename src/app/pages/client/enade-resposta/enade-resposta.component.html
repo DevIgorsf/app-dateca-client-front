@@ -1,98 +1,83 @@
-<div class="question__header">
-    <a role="button" routerLink="/client/dashboard">
+<div class="qpage">
+  <div class="qpage__header">
+    <a class="qpage__back" role="button" routerLink="/client/dashboard" aria-label="Voltar">
       <mat-icon aria-hidden="false" fontIcon="arrow_back"></mat-icon>
     </a>
+    <h1 class="qpage__title">Enade</h1>
   </div>
-  <div class="question">
-    <div class="question__button">
-      <button type="button" routerLink="/client/enade">
+
+  <mat-card class="qpage__card">
+    <span class="qpage__meta">{{ year }} · Questão {{ number }}</span>
+
+    <div
+      class="qpage__result"
+      [class.qpage__result--correct]="answer.answer === answer.answerCorrect"
+      [class.qpage__result--wrong]="answer.answer !== answer.answerCorrect">
+      <mat-icon
+        aria-hidden="false"
+        [fontIcon]="answer.answer === answer.answerCorrect ? 'check_circle' : 'cancel'"></mat-icon>
+      <span>{{ answer.answer === answer.answerCorrect ? 'Você acertou!' : 'Você errou essa questão' }}</span>
+    </div>
+
+    <p class="qpage__statement">{{ statement }}</p>
+
+    <div class="qpage__choices">
+      <div
+        class="choice choice--disabled"
+        [class.choice--correct]="answer.answerCorrect === 'A'"
+        [class.choice--wrong]="answer.answer === 'A' && answer.answer !== answer.answerCorrect">
+        <span class="choice__letter">A</span>
+        <span class="choice__text">{{ alternativeA }}</span>
+        <mat-icon *ngIf="answer.answerCorrect === 'A'" class="choice__icon--correct" aria-hidden="false" fontIcon="check_circle"></mat-icon>
+        <mat-icon *ngIf="answer.answer === 'A' && answer.answer !== answer.answerCorrect" class="choice__icon--wrong" aria-hidden="false" fontIcon="cancel"></mat-icon>
+      </div>
+
+      <div
+        class="choice choice--disabled"
+        [class.choice--correct]="answer.answerCorrect === 'B'"
+        [class.choice--wrong]="answer.answer === 'B' && answer.answer !== answer.answerCorrect">
+        <span class="choice__letter">B</span>
+        <span class="choice__text">{{ alternativeB }}</span>
+        <mat-icon *ngIf="answer.answerCorrect === 'B'" class="choice__icon--correct" aria-hidden="false" fontIcon="check_circle"></mat-icon>
+        <mat-icon *ngIf="answer.answer === 'B' && answer.answer !== answer.answerCorrect" class="choice__icon--wrong" aria-hidden="false" fontIcon="cancel"></mat-icon>
+      </div>
+
+      <div
+        class="choice choice--disabled"
+        [class.choice--correct]="answer.answerCorrect === 'C'"
+        [class.choice--wrong]="answer.answer === 'C' && answer.answer !== answer.answerCorrect">
+        <span class="choice__letter">C</span>
+        <span class="choice__text">{{ alternativeC }}</span>
+        <mat-icon *ngIf="answer.answerCorrect === 'C'" class="choice__icon--correct" aria-hidden="false" fontIcon="check_circle"></mat-icon>
+        <mat-icon *ngIf="answer.answer === 'C' && answer.answer !== answer.answerCorrect" class="choice__icon--wrong" aria-hidden="false" fontIcon="cancel"></mat-icon>
+      </div>
+
+      <div
+        class="choice choice--disabled"
+        [class.choice--correct]="answer.answerCorrect === 'D'"
+        [class.choice--wrong]="answer.answer === 'D' && answer.answer !== answer.answerCorrect">
+        <span class="choice__letter">D</span>
+        <span class="choice__text">{{ alternativeD }}</span>
+        <mat-icon *ngIf="answer.answerCorrect === 'D'" class="choice__icon--correct" aria-hidden="false" fontIcon="check_circle"></mat-icon>
+        <mat-icon *ngIf="answer.answer === 'D' && answer.answer !== answer.answerCorrect" class="choice__icon--wrong" aria-hidden="false" fontIcon="cancel"></mat-icon>
+      </div>
+
+      <div
+        class="choice choice--disabled"
+        [class.choice--correct]="answer.answerCorrect === 'E'"
+        [class.choice--wrong]="answer.answer === 'E' && answer.answer !== answer.answerCorrect">
+        <span class="choice__letter">E</span>
+        <span class="choice__text">{{ alternativeE }}</span>
+        <mat-icon *ngIf="answer.answerCorrect === 'E'" class="choice__icon--correct" aria-hidden="false" fontIcon="check_circle"></mat-icon>
+        <mat-icon *ngIf="answer.answer === 'E' && answer.answer !== answer.answerCorrect" class="choice__icon--wrong" aria-hidden="false" fontIcon="cancel"></mat-icon>
+      </div>
+    </div>
+
+    <div class="qpage__actions">
+      <button class="qpage__button" type="button" routerLink="/client/enade">
         <mat-icon aria-hidden="false" fontIcon="arrow_forward"></mat-icon>
-        <p>Próxima</p>
+        <span>Próxima</span>
       </button>
     </div>
-    <div class="question__title">
-      <p>
-        {{year}} - {{ number }}
-      </p>
-    </div>
-    <div class="question__enunciado">
-      <p>
-        {{ statement }}
-      </p>
-    </div>
-  
-  
-    <div class="form-group"
-      [ngClass]="{
-        question__resposta: answer.answerCorrect === 'A',
-        question__errada: answer.answer === 'A'}">
-      <p class="form-group__label">
-        A
-      </p>
-  
-      <p>
-        {{ alternativeA }}
-      </p>
-    </div>
-  
-    <div class="form-group"
-      [ngClass]="{
-        question__resposta: answer.answerCorrect === 'B',
-        question__errada: answer.answer === 'B'}">
-      <p class="form-group__label">
-        B
-      </p>
-  
-      <p>
-        {{ alternativeB }}
-      </p>
-    </div>
-  
-    <div class="form-group"
-      [ngClass]="{
-        question__resposta: answer.answerCorrect === 'C',
-        question__errada: answer.answer === 'C'}">
-      <p class="form-group__label">
-        C
-      </p>
-  
-      <p>
-        {{ alternativeC }}
-      </p>
-    </div>
-  
-    <div class="form-group"
-      [ngClass]="{
-        question__resposta: answer.answerCorrect === 'D',
-        question__errada: answer.answer === 'D'}">
-      <p class="form-group__label">
-        D
-      </p>
-  
-      <p>
-        {{ alternativeD }}
-      </p>
-    </div>
-  
-    <div class="form-group"
-      [ngClass]="{
-        question__resposta: answer.answerCorrect === 'E',
-        question__errada: answer.answer === 'E'}">
-      <p class="form-group__label">
-        E
-      </p>
-  
-      <p class="form-group__texto">
-        {{ alternativeE }}
-      </p>
-    </div>
-  
-    <div class="question__button">
-      <button type="button" routerLink="/client/enade">
-        <mat-icon aria-hidden="false" fontIcon="arrow_forward"></mat-icon>
-        <p>Próxima</p>
-      </button>
-    </div>
-  </div>
-  
-  
+  </mat-card>
+</div>
