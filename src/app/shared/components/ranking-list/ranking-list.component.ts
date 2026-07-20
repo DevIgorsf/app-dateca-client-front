@@ -4,12 +4,11 @@ import { MatCardModule } from '@angular/material/card';
 import { RankingEntry } from 'src/app/shared/utils/ranking.util';
 
 @Component({
-  selector: 'app-ranking-list',
-  standalone: true,
-  imports: [CommonModule, MatCardModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './ranking-list.component.html',
-  styleUrls: ['./ranking-list.component.scss'],
+    selector: 'app-ranking-list',
+    imports: [CommonModule, MatCardModule],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    templateUrl: './ranking-list.component.html',
+    styleUrls: ['./ranking-list.component.scss']
 })
 export class RankingListComponent {
   entries = input<RankingEntry[]>([]);

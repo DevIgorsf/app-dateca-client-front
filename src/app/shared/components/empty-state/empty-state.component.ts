@@ -5,12 +5,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
-  selector: 'app-empty-state',
-  standalone: true,
-  imports: [CommonModule, RouterModule, MatButtonModule, MatIconModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './empty-state.component.html',
-  styleUrls: ['./empty-state.component.scss'],
+    selector: 'app-empty-state',
+    imports: [CommonModule, RouterModule, MatButtonModule, MatIconModule],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    templateUrl: './empty-state.component.html',
+    styleUrls: ['./empty-state.component.scss']
 })
 export class EmptyStateComponent {
   icon = input('info');

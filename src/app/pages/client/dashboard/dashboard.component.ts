@@ -3,9 +3,10 @@ import { StudentService } from 'src/app/service/student/student.service';
 import { buildRankingEntries, RankingEntry } from 'src/app/shared/utils/ranking.util';
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+    selector: 'app-dashboard',
+    templateUrl: './dashboard.component.html',
+    styleUrls: ['./dashboard.component.scss'],
+    standalone: false
 })
 export class DashboardComponent implements OnInit {
   rankingStudents: RankingEntry[] = [];

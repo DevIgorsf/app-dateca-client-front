@@ -3,9 +3,10 @@ import { ActivatedRoute } from '@angular/router';
 import { QuestionService } from 'src/app/service/question/question.service';
 
 @Component({
-  selector: 'app-question-resposta',
-  templateUrl: './question-resposta.component.html',
-  styleUrls: ['./question-resposta.component.scss']
+    selector: 'app-question-resposta',
+    templateUrl: './question-resposta.component.html',
+    styleUrls: ['./question-resposta.component.scss'],
+    standalone: false
 })
 export class QuestionRespostaComponent {
 

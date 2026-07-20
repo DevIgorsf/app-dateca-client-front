@@ -2,12 +2,11 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-ranking-skeleton',
-  standalone: true,
-  imports: [CommonModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './ranking-skeleton.component.html',
-  styleUrls: ['./ranking-skeleton.component.scss'],
+    selector: 'app-ranking-skeleton',
+    imports: [CommonModule],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    templateUrl: './ranking-skeleton.component.html',
+    styleUrls: ['./ranking-skeleton.component.scss']
 })
 export class RankingSkeletonComponent {
   rows = input(6);

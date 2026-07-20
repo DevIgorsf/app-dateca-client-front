@@ -4,9 +4,10 @@ import { UserService } from 'src/app/service/auth/user.service';
 import { StudentService } from 'src/app/service/student/student.service';
 
 @Component({
-  selector: 'app-navbar',
-  templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.scss']
+    selector: 'app-navbar',
+    templateUrl: './navbar.component.html',
+    styleUrls: ['./navbar.component.scss'],
+    standalone: false
 })
 export class NavbarComponent {
   user$ = this.userService.retornaUsuario();

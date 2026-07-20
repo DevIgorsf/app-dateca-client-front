@@ -6,9 +6,10 @@ import { QuestionMultipleChoice } from 'src/app/interfaces/questionMultipleChoic
 import { QuestionService } from 'src/app/service/question/question.service';
 
 @Component({
-  selector: 'app-question',
-  templateUrl: './question.component.html',
-  styleUrls: ['./question.component.scss']
+    selector: 'app-question',
+    templateUrl: './question.component.html',
+    styleUrls: ['./question.component.scss'],
+    standalone: false
 })
 export class QuestionComponent implements OnInit {
 

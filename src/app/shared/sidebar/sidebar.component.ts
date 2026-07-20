@@ -5,9 +5,10 @@ import { UserService } from 'src/app/service/auth/user.service';
 const STORAGE_KEY = 'sidebar_collapsed';
 
 @Component({
-  selector: 'app-sidebar',
-  templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.scss']
+    selector: 'app-sidebar',
+    templateUrl: './sidebar.component.html',
+    styleUrls: ['./sidebar.component.scss'],
+    standalone: false
 })
 export class SidebarComponent implements OnInit {
   collapsed = false;

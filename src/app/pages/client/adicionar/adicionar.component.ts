@@ -14,9 +14,10 @@ const AVATAR_COLORS = [
 ];
 
 @Component({
-  selector: 'app-adicionar',
-  templateUrl: './adicionar.component.html',
-  styleUrls: ['./adicionar.component.scss']
+    selector: 'app-adicionar',
+    templateUrl: './adicionar.component.html',
+    styleUrls: ['./adicionar.component.scss'],
+    standalone: false
 })
 export class AdicionarComponent implements OnInit, OnDestroy {
   search = '';

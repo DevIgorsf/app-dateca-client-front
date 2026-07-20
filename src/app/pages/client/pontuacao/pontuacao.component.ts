@@ -14,21 +14,20 @@ import { MyPositionCardComponent } from 'src/app/shared/components/my-position-c
 const FRIENDS_PAGE_SIZE = 100;
 
 @Component({
-  selector: 'app-pontuacao',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    MatIconModule,
-    MatTabsModule,
-    RankingListComponent,
-    RankingSkeletonComponent,
-    EmptyStateComponent,
-    MyPositionCardComponent,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './pontuacao.component.html',
-  styleUrls: ['./pontuacao.component.scss'],
+    selector: 'app-pontuacao',
+    imports: [
+        CommonModule,
+        RouterModule,
+        MatIconModule,
+        MatTabsModule,
+        RankingListComponent,
+        RankingSkeletonComponent,
+        EmptyStateComponent,
+        MyPositionCardComponent,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    templateUrl: './pontuacao.component.html',
+    styleUrls: ['./pontuacao.component.scss']
 })
 export class PontuacaoComponent implements OnInit {
   protected geralEntries = signal<RankingEntry[]>([]);

@@ -4,9 +4,10 @@ import { Router } from '@angular/router';
 import { StudentService } from 'src/app/service/student/student.service';
 
 @Component({
-  selector: 'app-profile',
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss']
+    selector: 'app-profile',
+    templateUrl: './profile.component.html',
+    styleUrls: ['./profile.component.scss'],
+    standalone: false
 })
 export class ProfileComponent {
   alunoForm!: FormGroup;

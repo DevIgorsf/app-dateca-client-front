@@ -6,9 +6,10 @@ import { EnadeWithImage } from 'src/app/interfaces/EnadeWithImage';
 import { EnadeService } from 'src/app/service/enade/enade.service';
 
 @Component({
-  selector: 'app-enade',
-  templateUrl: './enade.component.html',
-  styleUrls: ['./enade.component.scss']
+    selector: 'app-enade',
+    templateUrl: './enade.component.html',
+    styleUrls: ['./enade.component.scss'],
+    standalone: false
 })
 export class EnadeComponent {
   formulario: FormGroup;
