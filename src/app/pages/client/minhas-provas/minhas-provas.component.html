@@ -1,0 +1,90 @@
+<div class="minhas-provas">
+  <div class="minhas-provas__header">
+    <h1 class="minhas-provas__title">Minhas Provas</h1>
+  </div>
+
+  <div class="minhas-provas__toolbar">
+    @if (!loading()) {
+      <span class="minhas-provas__count">{{ provas().length }} prova{{ provas().length === 1 ? '' : 's' }}</span>
+    }
+    <a class="btn-criar" routerLink="/client/provas/criar">
+      <mat-icon aria-hidden="false" fontIcon="add"></mat-icon>
+      Criar Prova
+    </a>
+  </div>
+
+  @if (loading()) {
+    <div class="minhas-provas__loading">
+      <mat-icon class="minhas-provas__loading-icon" aria-hidden="false" fontIcon="autorenew"></mat-icon>
+      <span>Carregando provas...</span>
+    </div>
+  }
+
+  @if (!loading() && provas().length > 0) {
+    <mat-card class="minhas-provas__card">
+      <div class="provas-table">
+        <div class="provas-table__head">
+          <span>Título</span>
+          <span>Status</span>
+          <span>Participantes</span>
+          <span>Abertura</span>
+          <span>Encerramento</span>
+          <span>Ranking</span>
+          <span class="provas-table__acoes-head">Ações</span>
+        </div>
+
+        @for (prova of provas(); track prova.id) {
+          <div class="provas-table__row">
+            <span class="provas-table__titulo">{{ prova.titulo }}</span>
+            <span>
+              <span class="badge" [class]="statusClass(prova.status)">{{ statusLabel(prova.status) }}</span>
+            </span>
+            <span>{{ prova.participantes > 0 ? prova.participantes : '—' }}</span>
+            <span>{{ formatarData(prova.dataAbertura) }}</span>
+            <span>{{ formatarData(prova.dataEncerramento) }}</span>
+            <span>
+              @if (prova.rankingDisponivel) {
+                <span class="ranking-tag">
+                  <mat-icon aria-hidden="false" fontIcon="check_circle"></mat-icon>
+                  Disponível
+                </span>
+              } @else {
+                <span>—</span>
+              }
+            </span>
+            <span class="provas-table__acoes">
+              <a class="icon-btn" [routerLink]="['/client/provas/editar', prova.id]" aria-label="Editar" matTooltip="Editar">
+                <mat-icon aria-hidden="false" fontIcon="edit"></mat-icon>
+              </a>
+              <a class="icon-btn" [class.icon-btn--disabled]="!podeVisualizar(prova)"
+                [routerLink]="podeVisualizar(prova) ? ['/client/provas/visualizar', prova.id] : null"
+                aria-label="Visualizar" matTooltip="Visualizar">
+                <mat-icon aria-hidden="false" fontIcon="visibility"></mat-icon>
+              </a>
+              <button type="button" class="icon-btn" [class.icon-btn--disabled]="!podeCompartilhar(prova)"
+                (click)="compartilhar(prova)" aria-label="Compartilhar" matTooltip="Compartilhar">
+                <mat-icon aria-hidden="false" fontIcon="share"></mat-icon>
+              </button>
+              <button type="button" class="icon-btn icon-btn--danger" (click)="excluir(prova)" aria-label="Excluir" matTooltip="Excluir">
+                <mat-icon aria-hidden="false" fontIcon="delete"></mat-icon>
+              </button>
+            </span>
+          </div>
+        }
+      </div>
+    </mat-card>
+  }
+
+  @if (!loading() && provas().length === 0) {
+    <app-empty-state
+      icon="description"
+      title="Você ainda não criou nenhuma prova."
+      description="Crie sua primeira prova manualmente e compartilhe com outros usuários."
+      actionLabel="Criar Prova"
+      actionLink="/client/provas/criar" />
+  }
+
+  @if (toastMessage(); as msg) {
+    <div class="toast">{{ msg }}</div>
+  }
+</div>

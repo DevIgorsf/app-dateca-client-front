@@ -2,111 +2,141 @@
 
 ## Contexto
 
-O frontend (Angular, `app-dateca-client-front`) já implementa duas telas novas:
+O frontend (Angular 22, `app-dateca-client-front`) já implementa três telas novas, todas como componentes **standalone**:
 
-- **Criar Prova** (`src/app/pages/client/criar-prova`): wizard de 4 passos (Informações, Questões, Configuração, Resumo) para um usuário criar uma prova manualmente, com questões de múltipla escolha (A–E).
+- **Criar Prova** (`src/app/pages/client/criar-prova`): wizard de 4 passos (Informações, Questões, Configuração, Resumo) para criar uma prova manualmente, com questões de múltipla escolha (A–E). Serve tanto para criar quanto para editar (`/client/provas/editar/:id`).
 - **Minhas Provas** (`src/app/pages/client/minhas-provas`): listagem das provas criadas pelo usuário logado, com status, participantes, datas e ranking.
-- **Visualizar Prova** (`src/app/pages/client/visualizar-prova`): detalhe somente-leitura de uma prova.
+- **Visualizar Prova** (`src/app/pages/client/visualizar-prova`): detalhe somente-leitura de uma prova (usada pelo dono e por quem recebe o link de compartilhamento).
 
-Hoje essas telas funcionam **100% no cliente**, persistindo em `localStorage` através de `src/app/service/prova/prova.service.ts`, porque não existe nenhum endpoint de backend para o conceito de "prova" ainda. Este documento descreve o que precisa existir no backend para substituir esse mock por dados reais.
+O serviço `src/app/service/prova/prova.service.ts` já está escrito para chamar os endpoints HTTP reais descritos abaixo — **não existe mais mock em localStorage**. Ou seja, assim que o backend implementar essas rotas, as três telas funcionam sem nenhuma mudança adicional no frontend.
 
-O backend já expõe (e o frontend já consome) os seguintes recursos análogos, que servem de referência de convenção:
+O backend hoje mistura duas convenções de rotas:
 
-- `GET  /questao/aluno` — retorna uma questão aleatória para o aluno responder.
-- `GET  /questao/imagens/:id` — imagens da questão (campo `imagem` em base64).
-- `POST /questao/answerQuestion/:id` — envia resposta do aluno.
-- `GET  /enade/aluno`, `GET /enade/imagens/:id`, `POST /enade/answerEnade/:id` — mesmo padrão para questões do ENADE.
-- Endpoints de aluno/estudante para ranking geral (consumidos por `StudentService.getRanking()` / `rankingStudent()`).
-- Autenticação via JWT (Bearer token, ver `auth.interceptor.ts` / `token.service.ts`), toda chamada autenticada carrega o usuário logado.
+1. **Legado** (Question/Enade/Student), endpoints em português, sem prefixo `/api`: `GET /questao/aluno`, `POST /questao/answerQuestion/:id`, `GET /enade/aluno`, `GET /aluno/ranking`, `GET /aluno/perfil`, etc.
+2. **Nova convenção** (Friendship, a feature real mais recente), em inglês, com paginação padronizada: `POST /friendships`, `PATCH /friendships/:id/accept`, `GET /me/friends`, `GET /users/search`, todas retornando um envelope `Page<T>`:
+   ```ts
+   interface Page<T> {
+     content: T[];
+     totalElements: number;
+     totalPages: number;
+     number: number;
+     size: number;
+     first: boolean;
+     last: boolean;
+     empty: boolean;
+   }
+   ```
 
-O módulo de Provas deve seguir a mesma convenção de rotas (recurso em português, sem prefixo `/api`) e o mesmo padrão de autenticação.
+Como "Provas" é uma feature nova (sem precedente legado), o frontend já foi implementado seguindo a **convenção nova** (estilo `friendship`): rotas em inglês, `/me/...` para "meus recursos", paginação `Page<T>`. A única exceção deliberada: o campo de dificuldade (`dificuldade`) reaproveita o enum `PointsEnum` já usado por `Question`/`Enade` (`'Fácil' | 'Médio' | 'Difícil'`), para não duplicar esse conceito no sistema.
 
-## Modelo de dados (baseado no que o frontend já modela)
+Autenticação: Bearer token (JWT) via o interceptor já existente (`auth.interceptor.ts`). Toda rota abaixo é autenticada e deve resolver o usuário autenticado a partir do token.
 
-Ver `src/app/interfaces/prova.ts` no repositório para os tipos exatos hoje usados no mock.
+## Modelo de dados
 
-### Entidade `Prova`
+Ver `src/app/interfaces/prova.ts` no repositório para os tipos exatos.
 
-| Campo | Tipo | Obrigatório | Observação |
-|---|---|---|---|
-| `id` | UUID/Long | gerado pelo backend | |
-| `titulo` | string | sim | |
-| `descricao` | string | não | |
-| `disciplina` | string | sim | hoje é uma lista estática no frontend (`DISCIPLINAS` em `prova.service.ts`); avaliar se deve virar FK para a entidade `Course` já existente no backend |
-| `dificuldade` | enum | sim | `Fácil` \| `Médio` \| `Difícil` — mesmo enum `PointsEnum` já usado em `Question`/`Enade` |
-| `capaUrl` | string (base64 ou URL) | não | imagem de capa, PNG/JPG até 5MB; seguir o mesmo padrão de armazenamento usado hoje para imagens de questão |
-| `dataAbertura` | date | não | |
-| `horaAbertura` | time | não | |
-| `dataEncerramento` | date | não | |
-| `maxParticipantes` | int | não | `null`/vazio = sem limite |
-| `visibilidade` | enum | sim | `TODOS` \| `AMIGOS` \| `GRUPO` — **`GRUPO` ainda não tem entidade de "grupo" no sistema**; o frontend hoje só avisa "em breve". Não é obrigatório implementar `GRUPO` nesta primeira versão, mas o enum deve reservar o valor. |
-| `status` | enum | calculado | `Rascunho` \| `Agendado` \| `Ativo` \| `Encerrado` — ver regra de negócio abaixo |
-| `criadorId` | FK (Professor/Student) | sim | usuário autenticado que criou a prova |
-| `participantes` | int | calculado | contagem de respostas/submissões distintas |
-| `criadaEm` | timestamp | gerado pelo backend | |
+### Enums novos
 
-### Entidade `ProvaQuestao` (1:N com `Prova`)
+```ts
+type ProvaStatus = 'DRAFT' | 'SCHEDULED' | 'ACTIVE' | 'CLOSED';
+type ProvaVisibility = 'EVERYONE' | 'FRIENDS' | 'GROUP';
+type ProvaAlternative = 'A' | 'B' | 'C' | 'D' | 'E';
+```
+
+### `ProvaSummaryDTO` (item da listagem "Minhas Provas")
 
 | Campo | Tipo | Observação |
 |---|---|---|
-| `id` | UUID/Long | |
-| `provaId` | FK | |
+| `id` | string (UUID) | |
+| `titulo` | string | |
+| `disciplina` | string | hoje é uma lista estática no frontend (`DISCIPLINAS` em `prova.service.ts`); avaliar se deve virar FK para a entidade `Course` já existente |
+| `status` | `ProvaStatus` | calculado no servidor, nunca setado diretamente pelo cliente (ver regra abaixo) |
+| `participantes` | number | contagem de submissões distintas |
+| `dataAbertura` | string (`YYYY-MM-DD`) \| null | |
+| `dataEncerramento` | string (`YYYY-MM-DD`) \| null | |
+| `rankingDisponivel` | boolean | `true` somente quando `status` é `ACTIVE` ou `CLOSED` |
+
+### `ProvaDTO` (detalhe completo — criar/editar/visualizar)
+
+Estende `ProvaSummaryDTO` e adiciona:
+
+| Campo | Tipo | Observação |
+|---|---|---|
+| `descricao` | string | |
+| `dificuldade` | `PointsEnum` | `'Fácil' \| 'Médio' \| 'Difícil'` — mesmo enum de `Question`/`Enade` |
+| `capaUrl` | string \| null | imagem de capa como data-URI base64 (`data:image/png;base64,...`), PNG/JPG até 5MB. **Não há endpoint separado de upload** — o base64 vai embutido no próprio payload de criação/edição, mesmo padrão já usado pelo endpoint legado `/questao/imagens/:id` (que já retorna imagem em base64). |
+| `questoes` | `ProvaQuestaoDTO[]` | |
+| `horaAbertura` | string (`HH:mm`) \| null | |
+| `maxParticipantes` | number \| null | `null` = sem limite |
+| `visibilidade` | `ProvaVisibility` | |
+| `criadorId` | string | usuário que criou a prova |
+| `criadaEm` | string (timestamp ISO) | |
+
+### `ProvaQuestaoDTO`
+
+| Campo | Tipo | Observação |
+|---|---|---|
+| `id` | string \| undefined | ausente ao criar |
 | `statement` | string | enunciado |
-| `alternativeA..E` | string | 5 alternativas |
-| `correctAnswer` | enum `A`\|`B`\|`C`\|`D`\|`E` | |
-| `comment` | string | comentário/explicação da resposta correta, exibido após o aluno responder |
-| `ordem` | int | ordem de exibição dentro da prova |
+| `alternativeA` … `alternativeE` | string | 5 alternativas |
+| `correctAnswer` | `ProvaAlternative` | |
+| `comment` | string | explicação exibida após o aluno responder |
 
-### Entidade `ProvaSubmissao` (para permitir ranking/participantes)
+### `ProvaRequest` (body de `POST /provas` e `PUT /provas/:id`)
 
-Análoga ao fluxo já existente de `answerQuestion`/`answerEnade`, mas por prova inteira:
+Igual ao `ProvaDTO`, mas sem `id`, `status`, `participantes`, `rankingDisponivel`, `criadorId`, `criadaEm` (todos calculados/atribuídos pelo servidor), e com um campo adicional:
 
 | Campo | Tipo | Observação |
 |---|---|---|
-| `id` | UUID/Long | |
-| `provaId` | FK | |
-| `studentId` | FK | |
-| `respostas` | lista de `{provaQuestaoId, respostaEscolhida}` | |
-| `pontuacao` | int/decimal | calculada no backend a partir do gabarito |
-| `respondidoEm` | timestamp | |
+| `publicar` | boolean | `true` = publicar imediatamente (transiciona para `SCHEDULED`/`ACTIVE` conforme a data de abertura); `false` = salvar como `DRAFT` (ação "Salvar rascunho" no wizard) |
+
+### `ProvaSubmissaoDTO` (necessária para alimentar `participantes` e o ranking — fora do escopo imediato das 3 telas, mas precisa existir para os campos acima fazerem sentido)
+
+| Campo | Tipo | Observação |
+|---|---|---|
+| `id` | string | |
+| `provaId` | string | |
+| `studentId` | string | |
+| `respostas` | `{ provaQuestaoId: string; respostaEscolhida: ProvaAlternative }[]` | |
+| `pontuacao` | number | calculada no backend a partir do gabarito |
+| `respondidoEm` | string (timestamp ISO) | |
 
 ## Regras de negócio
 
-1. **Cálculo de `status`** (não deve ser um campo livre editável pelo usuário, exceto `Rascunho`):
-   - `Rascunho`: prova salva mas não publicada (ação explícita "Salvar rascunho" no wizard). Nunca muda sozinha.
-   - `Agendado`: publicada, com `dataAbertura` no futuro.
-   - `Ativo`: publicada, `dataAbertura` já passou e (`dataEncerramento` vazio ou no futuro).
-   - `Encerrado`: publicada, `dataEncerramento` já passou.
-2. **Ranking** só fica disponível (`rankingDisponivel = true`) quando `status` é `Ativo` ou `Encerrado`.
+1. **`status` é sempre calculado pelo servidor**, nunca aceito como valor livre do cliente (o cliente só manda `publicar: boolean`):
+   - `DRAFT`: `publicar = false` na criação/edição. Nunca muda sozinho.
+   - `SCHEDULED`: publicada (`publicar = true`) com `dataAbertura` no futuro.
+   - `ACTIVE`: publicada, `dataAbertura` já passou e (`dataEncerramento` vazio ou no futuro).
+   - `CLOSED`: publicada, `dataEncerramento` já passou.
+2. **`rankingDisponivel`** = `true` somente quando `status` é `ACTIVE` ou `CLOSED`.
 3. **Visibilidade**:
-   - `TODOS`: qualquer usuário autenticado pode visualizar/responder.
-   - `AMIGOS`: apenas amigos do criador (o sistema de amizades já existe — ver `FriendshipService`/`friendship` no backend). Validar amizade ao consultar/responder a prova.
-   - `GRUPO`: reservado para o futuro; pode ser tratado como equivalente a `TODOS` por ora, ou retornar erro/feature-flag desligada.
+   - `EVERYONE`: qualquer usuário autenticado pode visualizar/responder.
+   - `FRIENDS`: apenas amigos do criador — reaproveitar o sistema de amizades já existente (`FriendshipService`/entidade `Friendship`) para validar antes de servir `GET /provas/:id` ou `GET /provas/:id/questoes/aluno`.
+   - `GROUP`: reservado para o futuro. **Não implementar entidade de grupo agora** — o frontend já avisa "em breve" e trata como se fosse `EVERYONE`. Só reserve o valor no enum para não quebrar o contrato depois.
 4. **Permissões**:
-   - Apenas o `criadorId` pode editar, excluir ou ver uma prova em `Rascunho`.
-   - Provas `Ativo`/`Encerrado`/`Agendado` publicadas podem ser listadas/visualizadas por quem tem permissão de visibilidade, mas só o criador pode editar/excluir.
-5. **Compartilhamento**: o frontend hoje gera um link `client/provas/visualizar/:id` — não exige endpoint extra, só que o `id` seja estável e a visualização respeite a regra de visibilidade acima.
-6. **Contagem de participantes** = número de `ProvaSubmissao` distintas por `provaId`.
+   - Só o `criadorId` pode `PUT`/`DELETE` uma prova, e só ele pode ver uma prova com `status = DRAFT`.
+   - Provas publicadas (`SCHEDULED`/`ACTIVE`/`CLOSED`) podem ser lidas por quem tem permissão de visibilidade, mas só o criador edita/exclui.
+5. **Contagem de `participantes`** = número de `ProvaSubmissao` distintas por `provaId`.
+6. **Compartilhamento**: o frontend gera o link `client/provas/visualizar/:id` no próprio cliente — não precisa de endpoint dedicado, só que `GET /provas/:id` respeite a regra de visibilidade do item 3.
 
 ## Endpoints necessários
 
-Todos autenticados (Bearer token), seguindo o padrão já usado pelo `auth.interceptor.ts`.
+Todos autenticados via Bearer token.
 
 | Método | Rota | Descrição |
 |---|---|---|
-| `GET` | `/prova/minhas` | Lista as provas criadas pelo usuário autenticado (para a tela "Minhas Provas"), já com `status` calculado, `participantes` e `rankingDisponivel`. |
-| `GET` | `/prova/:id` | Detalhe completo de uma prova (para editar ou visualizar), respeitando permissão/visibilidade. |
-| `POST` | `/prova` | Cria uma prova (rascunho ou já publicada, conforme `status` enviado/ação do wizard). Corpo: dados de `Prova` + lista de `ProvaQuestao`. |
-| `PUT` | `/prova/:id` | Atualiza uma prova existente (usado tanto para editar quanto para "salvar rascunho" novamente). |
-| `DELETE` | `/prova/:id` | Exclui a prova (com confirmação já feita no frontend). |
-| `POST` | `/prova/:id/publicar` | Publica um rascunho, transicionando de `Rascunho` para `Agendado`/`Ativo` conforme a data de abertura. *(Opcional: pode ser absorvido pelo `PUT` acima se preferir.)* |
-| `POST` | `/prova/:id/capa` | Upload da imagem de capa (multipart ou base64), retorna a URL/base64 salvo. |
-| `GET` | `/prova/publicas` | Lista provas visíveis para o usuário autenticado (para uma futura tela de "Biblioteca"/descobrir provas) — respeita `visibilidade`. *(Não é bloqueante para as duas telas já implementadas, mas é o próximo passo natural.)* |
-| `GET` | `/prova/:id/questoes/aluno` | Retorna a prova para o aluno responder (sem o campo `correctAnswer`/`comment` até ele enviar a resposta), no mesmo espírito de `/questao/aluno`. |
-| `POST` | `/prova/:id/responder` | Envia as respostas do aluno (`ProvaSubmissao`), calcula pontuação e retorna o resultado com gabarito/comentários, análogo a `/questao/answerQuestion/:id`. |
-| `GET` | `/prova/:id/ranking` | Ranking dos participantes daquela prova especificamente (pontuação, nome, posição), disponível apenas quando `status` é `Ativo`/`Encerrado`. |
+| `GET` | `/me/provas?page=&size=` | `Page<ProvaSummaryDTO>` — provas criadas pelo usuário autenticado (tela "Minhas Provas"). |
+| `GET` | `/provas/:id` | `ProvaDTO` completo, para editar ou visualizar. Aplica a regra de permissão/visibilidade do item 4. |
+| `POST` | `/provas` | Body: `ProvaRequest`. Cria uma prova (rascunho ou já publicada, conforme `publicar`). Retorna `ProvaDTO`. |
+| `PUT` | `/provas/:id` | Body: `ProvaRequest`. Atualiza uma prova existente (usado tanto para editar quanto para "salvar rascunho" de novo). Retorna `ProvaDTO`. |
+| `DELETE` | `/provas/:id` | Exclui a prova (o frontend já confirma com o usuário antes de chamar). |
+| `GET` | `/provas/:id/questoes/aluno` | *(Próximo passo, não bloqueia as 3 telas atuais)* Retorna a prova para o aluno responder, **sem** `correctAnswer`/`comment`, mesmo espírito de `/questao/aluno`. |
+| `POST` | `/provas/:id/responder` | *(Próximo passo)* Recebe `ProvaSubmissaoDTO.respostas`, calcula `pontuacao`, retorna resultado com gabarito e comentários — análogo a `/questao/answerQuestion/:id`. |
+| `GET` | `/provas/:id/ranking?page=&size=` | *(Próximo passo)* `Page<RankingEntryDTO>` dos participantes daquela prova, disponível só quando `rankingDisponivel = true`. |
 
-## Formato esperado do payload de criação/edição (`POST`/`PUT /prova`)
+As duas últimas linhas (`responder`/`ranking`) não são consumidas ainda pelas 3 telas já implementadas, mas foram antecipadas aqui porque os campos `participantes` e `rankingDisponivel` só fazem sentido de verdade quando esse fluxo existir — **priorize `GET /me/provas`, `GET /provas/:id`, `POST /provas`, `PUT /provas/:id` e `DELETE /provas/:id` primeiro**, que é o que já bloqueia o uso real das telas.
+
+## Formato esperado do payload de criação/edição (`POST`/`PUT /provas`)
 
 ```json
 {
@@ -131,15 +161,18 @@ Todos autenticados (Bearer token), seguindo o padrão já usado pelo `auth.inter
   "horaAbertura": "08:00",
   "dataEncerramento": "2026-08-15",
   "maxParticipantes": null,
-  "visibilidade": "TODOS",
-  "status": "Rascunho"
+  "visibilidade": "EVERYONE",
+  "publicar": true
 }
 ```
 
+Resposta (`ProvaDTO`) inclui adicionalmente `id`, `status` (calculado), `participantes`, `rankingDisponivel`, `criadorId`, `criadaEm`.
+
 ## Fora de escopo desta primeira entrega
 
-- Entidade/CRUD de "Grupo" para a opção de visibilidade `GRUPO` (o frontend já trata como "em breve").
-- Tela de "Biblioteca" (descobrir provas públicas de outros usuários) — só o endpoint `GET /prova/publicas` foi antecipado acima para não travar o modelo de dados depois.
+- Entidade/CRUD de "Grupo" para a visibilidade `GROUP` (frontend já trata como "em breve" / equivalente a `EVERYONE`).
+- Tela de "Biblioteca" (descobrir provas públicas de outros usuários).
+- `POST /provas/:id/responder` e `GET /provas/:id/ranking` podem vir numa segunda entrega — não bloqueiam "Criar Prova" nem "Minhas Provas", só deixam `participantes`/`ranking` sempre zerados até existirem.
 
 ---
 
@@ -148,46 +181,45 @@ Todos autenticados (Bearer token), seguindo o padrão já usado pelo `auth.inter
 > Copie o bloco abaixo ao pedir para um agente (ou desenvolvedor) implementar o backend.
 
 ```
-Preciso que você implemente, no backend do projeto DATECA/ProvaHub, o módulo de "Provas" (exames de múltipla escolha criados manualmente pelos usuários), que hoje só existe como mock no frontend Angular.
+Preciso que você implemente, no backend do projeto DATECA/ProvaHub, o módulo de "Provas" (exames de múltipla escolha criados manualmente pelos usuários). O frontend Angular já está pronto e chama HTTP real (não há mais mock) — preciso só do backend para as telas funcionarem.
 
 Contexto do sistema existente:
-- O backend já tem entidades Question, Enade, Course, Professor, Student, PointsEnum (Fácil/Médio/Difícil) e um sistema de amizades entre estudantes.
-- Os endpoints existentes seguem o padrão: recurso em português, sem prefixo /api (ex: GET /questao/aluno, POST /questao/answerQuestion/:id, GET /enade/aluno), autenticação via JWT Bearer token.
-- O frontend já está pronto (telas "Criar Prova" e "Minhas Provas") e espera consumir os endpoints REST descritos abaixo — não é necessário alterar o frontend, apenas substituir a camada de mock (localStorage) pela API real quando o backend estiver pronto.
+- O backend tem duas convenções de rota convivendo: uma legada em português sem paginação (ex: GET /questao/aluno, GET /aluno/ranking) usada por Question/Enade/Student, e uma nova em inglês com paginação padronizada (ex: POST /friendships, GET /me/friends, GET /users/search — todas retornando um envelope Page<T> com content/totalElements/totalPages/number/size/first/last/empty) usada pela feature de amizades, que é a mais recente e madura do sistema.
+- Siga a convenção NOVA (estilo friendship) para tudo que for novo aqui: rotas em inglês, prefixo /me/ para "meus recursos", envelope Page<T> para listagens paginadas.
+- Exceção: reaproveite o enum PointsEnum já existente ('Fácil' | 'Médio' | 'Difícil'), usado hoje por Question e Enade, para o campo de dificuldade da prova — não crie um enum de dificuldade paralelo.
+- Autenticação: Bearer token JWT, mesmo interceptor/guard já usado no resto do sistema.
 
 O que preciso que você crie:
 
-1. Entidade `Prova` com os campos: id, titulo, descricao, disciplina, dificuldade (enum reaproveitando PointsEnum), capaUrl, dataAbertura, horaAbertura, dataEncerramento, maxParticipantes, visibilidade (enum TODOS/AMIGOS/GRUPO), status (enum Rascunho/Agendado/Ativo/Encerrado, calculado a partir das datas — nunca setado manualmente exceto Rascunho), criadorId (FK para o usuário autenticado que criou), participantes (calculado) e criadaEm.
+1. Entidade Prova: id, titulo, descricao, disciplina, dificuldade (reaproveitando PointsEnum), capaUrl (string, base64 data-URI, sem endpoint de upload separado — vai embutido no payload), dataAbertura, horaAbertura, dataEncerramento, maxParticipantes, visibilidade (enum EVERYONE/FRIENDS/GROUP), status (enum DRAFT/SCHEDULED/ACTIVE/CLOSED — SEMPRE calculado no servidor a partir das datas, nunca aceito como valor livre do cliente), criadorId (FK do usuário autenticado que criou), participantes (calculado) e criadaEm.
 
-2. Entidade `ProvaQuestao` (1:N com Prova): statement, alternativeA a alternativeE, correctAnswer (A-E), comment, ordem.
+2. Entidade ProvaQuestao (1:N com Prova): statement, alternativeA a alternativeE, correctAnswer (A-E), comment.
 
-3. Entidade `ProvaSubmissao` para registrar quando um aluno responde uma prova inteira: provaId, studentId, respostas (lista de questão + resposta escolhida), pontuação calculada, respondidoEm. Isso alimenta a contagem de "participantes" e o ranking por prova.
+3. Entidade ProvaSubmissao, para futuramente registrar quando um aluno responde uma prova inteira (provaId, studentId, respostas, pontuação calculada, respondidoEm) — crie o modelo agora mas os endpoints de responder/ranking podem vir numa segunda entrega, não são bloqueantes.
 
 4. Regras de negócio:
-   - status é derivado das datas (dataAbertura/dataEncerramento) e nunca editável diretamente pelo cliente, exceto a transição para Rascunho.
-   - rankingDisponivel = true somente quando status é Ativo ou Encerrado.
-   - Apenas o criador pode editar/excluir/ver uma prova em Rascunho.
-   - visibilidade AMIGOS restringe a visualização/resposta a amigos do criador (reaproveitar o sistema de amizades já existente).
-   - visibilidade GRUPO pode ser tratada como TODOS por enquanto (ainda não existe entidade de grupo no sistema — não crie uma agora, só reserve o valor do enum).
+   - status é derivado de dataAbertura/dataEncerramento no momento da leitura (ou recalculado num job, à sua escolha): SCHEDULED se dataAbertura no futuro, ACTIVE se já abriu e não encerrou, CLOSED se dataEncerramento já passou. DRAFT é setado explicitamente quando o cliente manda publicar=false e nunca muda sozinho.
+   - rankingDisponivel = true somente quando status é ACTIVE ou CLOSED.
+   - Só o criador pode PUT/DELETE uma prova, e só ele pode ler uma prova com status DRAFT.
+   - visibilidade FRIENDS restringe a leitura a amigos do criador (reaproveite a entidade/lógica de amizade já existente). GROUP pode ser tratado como EVERYONE por enquanto — não crie entidade de grupo agora, só reserve o valor do enum.
 
-5. Endpoints REST necessários (JSON, autenticados por Bearer token):
-   - GET  /prova/minhas — provas criadas pelo usuário logado, com status/participantes/rankingDisponivel calculados.
-   - GET  /prova/:id — detalhe completo (para editar/visualizar), respeitando permissão.
-   - POST /prova — cria uma prova (rascunho ou publicada) com sua lista de questões.
-   - PUT  /prova/:id — atualiza uma prova existente.
-   - DELETE /prova/:id — exclui a prova.
-   - POST /prova/:id/capa — upload da imagem de capa (PNG/JPG, até 5MB).
-   - GET  /prova/:id/questoes/aluno — retorna a prova para o aluno responder, SEM correctAnswer/comment.
-   - POST /prova/:id/responder — recebe as respostas do aluno, calcula pontuação, retorna resultado com gabarito e comentários (mesmo espírito de /questao/answerQuestion/:id).
-   - GET  /prova/:id/ranking — ranking de participantes daquela prova específica.
+5. Endpoints REST necessários, priorizados nesta ordem (os 5 primeiros são o que bloqueia as telas já prontas no frontend; os 2 últimos podem vir depois):
+   - GET  /me/provas?page=&size= — Page<ProvaSummaryDTO> das provas criadas pelo usuário logado.
+   - GET  /provas/:id — ProvaDTO completo (edição/visualização), respeitando a regra de permissão do item 4.
+   - POST /provas — body ProvaRequest, cria a prova (rascunho ou publicada conforme o campo publicar). Retorna ProvaDTO.
+   - PUT  /provas/:id — body ProvaRequest, atualiza. Retorna ProvaDTO.
+   - DELETE /provas/:id — exclui.
+   - GET  /provas/:id/questoes/aluno — retorna a prova para responder, SEM correctAnswer/comment.
+   - POST /provas/:id/responder — recebe as respostas, calcula pontuação, retorna gabarito+comentários.
+   - GET  /provas/:id/ranking?page=&size= — Page<RankingEntryDTO> dos participantes daquela prova.
 
-O payload de criação/edição deve aceitar exatamente esta forma (exemplo):
+O payload de POST/PUT /provas deve aceitar exatamente esta forma:
 {
   "titulo": "string",
   "descricao": "string",
   "disciplina": "string",
   "dificuldade": "Fácil" | "Médio" | "Difícil",
-  "capaUrl": "string (base64) ou null",
+  "capaUrl": "string (data-URI base64) ou null",
   "questoes": [
     { "statement": "string", "alternativeA": "string", "alternativeB": "string", "alternativeC": "string", "alternativeD": "string", "alternativeE": "string", "correctAnswer": "A"|"B"|"C"|"D"|"E", "comment": "string" }
   ],
@@ -195,11 +227,13 @@ O payload de criação/edição deve aceitar exatamente esta forma (exemplo):
   "horaAbertura": "HH:mm ou null",
   "dataEncerramento": "YYYY-MM-DD ou null",
   "maxParticipantes": number ou null,
-  "visibilidade": "TODOS" | "AMIGOS" | "GRUPO",
-  "status": "Rascunho" | "Agendado" | "Ativo" | "Encerrado"
+  "visibilidade": "EVERYONE" | "FRIENDS" | "GROUP",
+  "publicar": boolean
 }
 
-Não é necessário implementar a entidade de "Grupo" nem a tela de "Biblioteca" (listagem pública de provas de terceiros) nesta entrega — apenas deixe o enum de visibilidade e o endpoint GET /prova/publicas previstos para não quebrar o modelo depois.
+A resposta (ProvaDTO) deve incluir também: id, status (calculado), participantes, rankingDisponivel, criadorId, criadaEm.
 
-Ao terminar, me diga quais rotas ficaram diferentes do especificado (nome, verbo HTTP, formato de payload) para eu ajustar a camada de serviço no frontend Angular (src/app/service/prova/prova.service.ts) que hoje simula tudo em localStorage.
+Não implemente a entidade de "Grupo" nem uma tela pública de "Biblioteca" nesta entrega.
+
+Ao terminar, me diga quais rotas ou nomes de campo ficaram diferentes do especificado para eu conferir contra src/app/service/prova/prova.service.ts e src/app/interfaces/prova.ts no frontend Angular, que já foram escritos esperando exatamente este contrato.
 ```

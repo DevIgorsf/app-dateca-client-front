@@ -56,6 +56,31 @@
 
     <a
       class="sidebar__link"
+      routerLink="/client/provas"
+      routerLinkActive="sidebar__link--active"
+      [routerLinkActiveOptions]="{exact: true}"
+      [matTooltip]="collapsed ? 'Minhas Provas' : ''"
+      matTooltipPosition="right">
+      <mat-icon aria-hidden="false" fontIcon="assignment"></mat-icon>
+      @if (!collapsed) {
+        <span>Minhas Provas</span>
+      }
+    </a>
+
+    <a
+      class="sidebar__link"
+      routerLink="/client/provas/criar"
+      routerLinkActive="sidebar__link--active"
+      [matTooltip]="collapsed ? 'Criar Prova' : ''"
+      matTooltipPosition="right">
+      <mat-icon aria-hidden="false" fontIcon="add_circle"></mat-icon>
+      @if (!collapsed) {
+        <span>Criar Prova</span>
+      }
+    </a>
+
+    <a
+      class="sidebar__link"
       routerLink="/client/adicionar"
       routerLinkActive="sidebar__link--active"
       [matTooltip]="collapsed ? 'Adicionar amigo' : ''"

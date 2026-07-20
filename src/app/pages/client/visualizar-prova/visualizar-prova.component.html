@@ -1,0 +1,93 @@
+<div class="visualizar-prova">
+  <div class="visualizar-prova__header">
+    <a class="visualizar-prova__back" role="button" routerLink="/client/provas" aria-label="Voltar">
+      <mat-icon aria-hidden="false" fontIcon="arrow_back"></mat-icon>
+    </a>
+    <h1 class="visualizar-prova__title">{{ prova()?.titulo || 'Prova' }}</h1>
+  </div>
+
+  @if (loading()) {
+    <div class="visualizar-prova__loading">
+      <mat-icon class="visualizar-prova__loading-icon" aria-hidden="false" fontIcon="autorenew"></mat-icon>
+      <span>Carregando prova...</span>
+    </div>
+  }
+
+  @if (!loading() && notFound()) {
+    <app-empty-state
+      icon="search_off"
+      title="Prova não encontrada"
+      description="Ela pode ter sido removida ou você não tem permissão para visualizá-la." />
+  }
+
+  @if (!loading() && prova(); as p) {
+    @if (p.capaUrl) {
+      <mat-card class="visualizar-prova__cover">
+        <img [src]="p.capaUrl" alt="Capa da prova">
+      </mat-card>
+    }
+
+    <mat-card class="visualizar-prova__card">
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="info-item__label">Disciplina</span>
+          <span class="info-item__value">{{ p.disciplina }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-item__label">Dificuldade</span>
+          <span class="info-item__value">{{ p.dificuldade }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-item__label">Status</span>
+          <span class="info-item__value">{{ p.status }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-item__label">Participantes</span>
+          <span class="info-item__value">{{ p.participantes }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-item__label">Abertura</span>
+          <span class="info-item__value">{{ formatarData(p.dataAbertura, p.horaAbertura) }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-item__label">Encerramento</span>
+          <span class="info-item__value">{{ formatarData(p.dataEncerramento) }}</span>
+        </div>
+      </div>
+
+      @if (p.descricao) {
+        <p class="visualizar-prova__descricao">{{ p.descricao }}</p>
+      }
+    </mat-card>
+
+    <h2 class="section-title">Questões ({{ p.questoes.length }})</h2>
+
+    @for (q of p.questoes; track q.id ?? $index; let i = $index) {
+      <mat-card class="question-view">
+        <div class="question-view__header">Questão {{ i + 1 }}</div>
+        <p class="question-view__statement">{{ q.statement }}</p>
+
+        @for (par of [['A', q.alternativeA], ['B', q.alternativeB], ['C', q.alternativeC], ['D', q.alternativeD], ['E', q.alternativeE]]; track par[0]) {
+          <div class="question-view__alt" [class.question-view__alt--correct]="par[0] === q.correctAnswer">
+            <span class="question-view__alt-label">{{ par[0] }}</span>
+            <span>{{ par[1] }}</span>
+            @if (par[0] === q.correctAnswer) {
+              <mat-icon aria-hidden="false" fontIcon="check_circle"></mat-icon>
+            }
+          </div>
+        }
+
+        @if (q.comment) {
+          <p class="question-view__comment">
+            <strong>Comentário:</strong> {{ q.comment }}
+          </p>
+        }
+      </mat-card>
+    } @empty {
+      <div class="visualizar-prova__empty">
+        <mat-icon aria-hidden="false" fontIcon="quiz"></mat-icon>
+        <p>Esta prova ainda não possui questões.</p>
+      </div>
+    }
+  }
+</div>

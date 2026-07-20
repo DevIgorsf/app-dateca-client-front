@@ -1,0 +1,278 @@
+<div class="criar-prova">
+  <div class="criar-prova__header">
+    <a class="criar-prova__back" role="button" routerLink="/client/provas" aria-label="Voltar">
+      <mat-icon aria-hidden="false" fontIcon="arrow_back"></mat-icon>
+    </a>
+    <h1 class="criar-prova__title">{{ editId ? 'Editar Prova' : 'Criar Nova Prova' }}</h1>
+  </div>
+
+  <div class="stepper">
+    @for (step of [
+      { n: 1, label: 'Informações' },
+      { n: 2, label: 'Questões' },
+      { n: 3, label: 'Configuração' },
+      { n: 4, label: 'Resumo' }
+    ]; track step.n; let last = $last) {
+      <div class="stepper__step" [class.stepper__step--disabled]="step.n > maxStepReached()" (click)="irParaStep(step.n)">
+        <div class="stepper__circle"
+          [class.stepper__circle--active]="currentStep() === step.n"
+          [class.stepper__circle--done]="maxStepReached() > step.n && currentStep() !== step.n">
+          @if (maxStepReached() > step.n && currentStep() !== step.n) {
+            <mat-icon aria-hidden="false" fontIcon="check"></mat-icon>
+          } @else {
+            <span>{{ step.n }}</span>
+          }
+        </div>
+        <span class="stepper__label" [class.stepper__label--active]="currentStep() === step.n">{{ step.label }}</span>
+      </div>
+      @if (!last) {
+        <div class="stepper__line" [class.stepper__line--done]="maxStepReached() > step.n"></div>
+      }
+    }
+  </div>
+
+  <mat-card class="criar-prova__card">
+
+    @if (currentStep() === 1) {
+      <form [formGroup]="informacoesForm">
+        <h2 class="section-title">Informações da Prova</h2>
+
+        <label class="field-label">Título *</label>
+        <input class="field-input" type="text" formControlName="titulo" placeholder="Ex: Matemática Avançada — Cálculo Diferencial">
+
+        <label class="field-label">Descrição</label>
+        <textarea class="field-textarea" formControlName="descricao" placeholder="Descreva o conteúdo e objetivos da prova..."></textarea>
+
+        <div class="field-row">
+          <div class="field-col">
+            <label class="field-label">Disciplina *</label>
+            <select class="field-input" formControlName="disciplina">
+              <option value="" disabled selected>Selecionar...</option>
+              @for (d of disciplinas; track d) {
+                <option [value]="d">{{ d }}</option>
+              }
+            </select>
+          </div>
+          <div class="field-col">
+            <label class="field-label">Dificuldade</label>
+            <div class="pill-group">
+              @for (d of dificuldades; track d) {
+                <button type="button" class="pill"
+                  [class.pill--facil-active]="d === 'Fácil' && informacoesForm.get('dificuldade')?.value === d"
+                  [class.pill--medio-active]="d === 'Médio' && informacoesForm.get('dificuldade')?.value === d"
+                  [class.pill--dificil-active]="d === 'Difícil' && informacoesForm.get('dificuldade')?.value === d"
+                  (click)="informacoesForm.patchValue({dificuldade: d})">{{ d }}</button>
+              }
+            </div>
+          </div>
+        </div>
+
+        <label class="field-label">Imagem da Capa (opcional)</label>
+        @if (!capaPreview()) {
+          <label class="dropzone" for="capaInput" (dragover)="$event.preventDefault()" (drop)="onDropCapa($event)">
+            <mat-icon aria-hidden="false" fontIcon="upload"></mat-icon>
+            <span>Arraste uma imagem ou clique para selecionar</span>
+            <span class="dropzone__hint">PNG, JPG até 5MB</span>
+            <input id="capaInput" type="file" accept="image/png,image/jpeg" hidden (change)="onCapaSelecionada($event)">
+          </label>
+        } @else {
+          <div class="dropzone-preview">
+            <img [src]="capaPreview()" alt="Capa da prova">
+            <button type="button" class="dropzone-preview__remove" (click)="removerCapa()">
+              <mat-icon aria-hidden="false" fontIcon="close"></mat-icon>
+            </button>
+          </div>
+        }
+        @if (capaErro()) {
+          <div class="field-error">{{ capaErro() }}</div>
+        }
+      </form>
+    }
+
+    @if (currentStep() === 2) {
+      <div>
+        <div class="section-header">
+          <h2 class="section-title">Adicionar Questões</h2>
+          <span class="section-badge">{{ questoesPreenchidas }} questões</span>
+        </div>
+
+        @for (q of questoesArray; track q; let i = $index) {
+          <div class="question-card">
+            <div class="question-card__header">
+              <span>Questão {{ i + 1 }}</span>
+              <button type="button" class="question-card__remove" (click)="removerQuestao(i)" aria-label="Remover questão">
+                <mat-icon aria-hidden="false" fontIcon="close"></mat-icon>
+              </button>
+            </div>
+
+            <textarea class="field-textarea" [formControl]="statementControl(i)" placeholder="Digite o enunciado da questão..."></textarea>
+
+            @for (letra of alternativas; track letra) {
+              <div class="question-alt">
+                <span class="question-alt__label">{{ letra }}</span>
+                <input class="field-input" type="text" [formControl]="alternativeControl(i, letra)" [placeholder]="'Alternativa ' + letra">
+                <input type="radio" class="question-alt__radio" [formControl]="correctAnswerControl(i)" [value]="letra" [name]="'correta-' + i">
+              </div>
+            }
+
+            <label class="field-label">Comentário da resposta</label>
+            <textarea class="field-textarea field-textarea--sm" [formControl]="commentControl(i)" placeholder="Explique a resposta correta..."></textarea>
+          </div>
+        }
+
+        <button type="button" class="add-question-btn" (click)="adicionarQuestao()">
+          <mat-icon aria-hidden="false" fontIcon="add"></mat-icon>
+          Adicionar Questão
+        </button>
+      </div>
+    }
+
+    @if (currentStep() === 3) {
+      <form [formGroup]="configuracaoForm">
+        <h2 class="section-title">Configuração da Prova</h2>
+
+        <div class="field-row">
+          <div class="field-col">
+            <label class="field-label">Data de Abertura</label>
+            <input class="field-input" type="date" formControlName="dataAbertura">
+          </div>
+          <div class="field-col">
+            <label class="field-label">Hora</label>
+            <input class="field-input" type="time" formControlName="horaAbertura">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field-col">
+            <label class="field-label">Data de Encerramento</label>
+            <input class="field-input" type="date" formControlName="dataEncerramento">
+          </div>
+          <div class="field-col">
+            <label class="field-label">Máximo de Participantes</label>
+            <input class="field-input" type="number" min="1" formControlName="maxParticipantes" placeholder="Sem limite">
+          </div>
+        </div>
+        @if (!step3Valido) {
+          <div class="field-error">A data de encerramento deve ser posterior à data de abertura.</div>
+        }
+
+        <label class="field-label">Quem pode participar</label>
+        <div class="visibility-options">
+          <button type="button" class="visibility-card" [class.visibility-card--active]="configuracaoForm.get('visibilidade')?.value === 'EVERYONE'"
+            (click)="configuracaoForm.patchValue({visibilidade: 'EVERYONE'})">
+            <span class="visibility-card__radio"></span>
+            <span class="visibility-card__text">
+              <strong>Todos os usuários</strong>
+              <small>Qualquer pessoa na plataforma pode participar.</small>
+            </span>
+          </button>
+          <button type="button" class="visibility-card" [class.visibility-card--active]="configuracaoForm.get('visibilidade')?.value === 'FRIENDS'"
+            (click)="configuracaoForm.patchValue({visibilidade: 'FRIENDS'})">
+            <span class="visibility-card__radio"></span>
+            <span class="visibility-card__text">
+              <strong>Somente amigos</strong>
+              <small>Apenas seus amigos têm acesso.</small>
+            </span>
+          </button>
+          <button type="button" class="visibility-card" [class.visibility-card--active]="configuracaoForm.get('visibilidade')?.value === 'GROUP'"
+            (click)="configuracaoForm.patchValue({visibilidade: 'GROUP'})">
+            <span class="visibility-card__radio"></span>
+            <span class="visibility-card__text">
+              <strong>Grupo específico</strong>
+              <small>Apenas membros de um grupo selecionado.</small>
+            </span>
+          </button>
+        </div>
+        @if (configuracaoForm.get('visibilidade')?.value === 'GROUP') {
+          <div class="field-hint">
+            Criação de grupos em breve — por enquanto a prova ficará visível para todos os usuários.
+          </div>
+        }
+      </form>
+    }
+
+    @if (currentStep() === 4) {
+      <div>
+        <h2 class="section-title">Resumo da Prova</h2>
+
+        <div class="summary-row">
+          <span class="summary-label">Título</span>
+          <span class="summary-value">{{ informacoesForm.get('titulo')?.value || '—' }}</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Disciplina</span>
+          <span class="summary-value">{{ informacoesForm.get('disciplina')?.value || '—' }}</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Dificuldade</span>
+          <span class="summary-value">{{ informacoesForm.get('dificuldade')?.value }}</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Questões</span>
+          <span class="summary-value">{{ questoesPreenchidas }} questões</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Abertura</span>
+          <span class="summary-value">{{ formatarDataHora(configuracaoForm.get('dataAbertura')?.value, configuracaoForm.get('horaAbertura')?.value) }}</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Encerramento</span>
+          <span class="summary-value">{{ formatarDataHora(configuracaoForm.get('dataEncerramento')?.value) }}</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Participantes</span>
+          <span class="summary-value">{{ visibilidadeLabel }}</span>
+        </div>
+
+        <div class="summary-banner" [class.summary-banner--warn]="!prontaParaPublicar">
+          <mat-icon aria-hidden="false" [fontIcon]="prontaParaPublicar ? 'check_circle' : 'error_outline'"></mat-icon>
+          <div>
+            <strong>{{ prontaParaPublicar ? 'Prova pronta para publicação!' : 'Ainda faltam informações' }}</strong>
+            @if (prontaParaPublicar) {
+              <p>Revise as informações acima e clique em Publicar quando estiver pronto.</p>
+            } @else {
+              <p>Verifique se o título, disciplina e ao menos uma questão completa foram preenchidos.</p>
+            }
+          </div>
+        </div>
+
+        @if (erroSalvar()) {
+          <div class="field-error">{{ erroSalvar() }}</div>
+        }
+      </div>
+    }
+  </mat-card>
+
+  <div class="criar-prova__footer">
+    @if (currentStep() === 1) {
+      <button type="button" class="btn btn--ghost" (click)="cancelar()">
+        <mat-icon aria-hidden="false" fontIcon="chevron_left"></mat-icon>
+        Cancelar
+      </button>
+    }
+    @if (currentStep() > 1) {
+      <button type="button" class="btn btn--ghost" (click)="anteriorStep()">
+        <mat-icon aria-hidden="false" fontIcon="chevron_left"></mat-icon>
+        Anterior
+      </button>
+    }
+
+    <div class="criar-prova__footer-right">
+      @if (currentStep() < 4) {
+        <button type="button" class="btn btn--link" [disabled]="saving()" (click)="salvarRascunho()">
+          Salvar rascunho
+        </button>
+        <button type="button" class="btn btn--primary" (click)="proximoStep()">
+          Próximo
+          <mat-icon aria-hidden="false" fontIcon="chevron_right"></mat-icon>
+        </button>
+      }
+      @if (currentStep() === 4) {
+        <button type="button" class="btn btn--success" [disabled]="!prontaParaPublicar || saving()" (click)="publicar()">
+          <mat-icon aria-hidden="false" fontIcon="check_circle"></mat-icon>
+          Publicar Prova
+        </button>
+      }
+    </div>
+  </div>
+</div>
