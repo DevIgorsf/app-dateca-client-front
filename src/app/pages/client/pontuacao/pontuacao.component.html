@@ -3,70 +3,41 @@
     <a class="ranking__back" role="button" routerLink="/client/dashboard" aria-label="Voltar">
       <mat-icon aria-hidden="false" fontIcon="arrow_back"></mat-icon>
     </a>
-    <h1 class="ranking__title">Ranking Geral</h1>
+    <h1 class="ranking__title">Ranking</h1>
   </div>
 
-  <div class="ranking__loading" *ngIf="loading">
-    <mat-icon class="ranking__loading-icon" aria-hidden="false" fontIcon="autorenew"></mat-icon>
-    <span>Carregando ranking...</span>
-  </div>
-
-  <ng-container *ngIf="!loading">
-    <div class="podium" *ngIf="hasPodium">
-      <div class="podium__place podium__place--second">
-        <div class="podium__avatar" [style.background]="second!.color">{{ second!.initials }}</div>
-        <div class="podium__name">{{ second!.isCurrentUser ? 'Você' : second!.name }}</div>
-        <div class="podium__points">{{ second!.points }} pts</div>
-        <div class="podium__step podium__step--second">
-          <span class="podium__medal">🥈</span>
-        </div>
+  <mat-tab-group class="ranking__tabs" animationDuration="200ms">
+    <mat-tab label="🌍 Ranking Geral">
+      <div class="ranking__tab-panel">
+        @if (geralLoading()) {
+          <app-ranking-skeleton />
+        } @else {
+          @if (myGeralEntry(); as me) {
+            <app-my-position-card [position]="me.position" [points]="me.points" label="no Ranking Geral" />
+          }
+          <app-ranking-list [entries]="geralEntries()" />
+        }
       </div>
+    </mat-tab>
 
-      <div class="podium__place podium__place--first">
-        <div class="podium__crown">👑</div>
-        <div class="podium__avatar podium__avatar--large" [style.background]="first!.color">{{ first!.initials }}</div>
-        <div class="podium__name">{{ first!.isCurrentUser ? 'Você' : first!.name }}</div>
-        <div class="podium__points">{{ first!.points }} pts</div>
-        <div class="podium__step podium__step--first">
-          <span class="podium__medal">🥇</span>
-        </div>
+    <mat-tab label="👥 Ranking dos Amigos">
+      <div class="ranking__tab-panel">
+        @if (amigosLoading()) {
+          <app-ranking-skeleton />
+        } @else if (amigosEntries().length === 0) {
+          <app-empty-state
+            icon="group_add"
+            title="Você ainda não possui amigos."
+            description="Adicione amigos para competir e acompanhar seu desempenho entre pessoas que você conhece."
+            actionLabel="Encontrar Amigos"
+            actionLink="/client/adicionar" />
+        } @else {
+          @if (myAmigosEntry(); as me) {
+            <app-my-position-card [position]="me.position" [points]="me.points" label="entre seus amigos" />
+          }
+          <app-ranking-list [entries]="amigosEntries()" emptyMessage="Nenhum amigo pontuou ainda." />
+        }
       </div>
-
-      <div class="podium__place podium__place--third">
-        <div class="podium__avatar" [style.background]="third!.color">{{ third!.initials }}</div>
-        <div class="podium__name">{{ third!.isCurrentUser ? 'Você' : third!.name }}</div>
-        <div class="podium__points">{{ third!.points }} pts</div>
-        <div class="podium__step podium__step--third">
-          <span class="podium__medal">🥉</span>
-        </div>
-      </div>
-    </div>
-
-    <mat-card class="ranking__card">
-      <div class="ranking__card-header">
-        <h2>Classificação completa</h2>
-        <span class="ranking__count">{{ rankingStudents.length }} participantes</span>
-      </div>
-      <mat-card-content>
-        <div
-          class="ranking__row"
-          *ngFor="let entry of rankingStudents"
-          [class.ranking__row--you]="entry.isCurrentUser">
-          <div class="ranking__position">
-            <span *ngIf="entry.position === 1">🥇</span>
-            <span *ngIf="entry.position === 2">🥈</span>
-            <span *ngIf="entry.position === 3">🥉</span>
-            <span *ngIf="entry.position > 3">#{{ entry.position }}</span>
-          </div>
-          <div class="ranking__avatar" [style.background]="entry.color">{{ entry.initials }}</div>
-          <div class="ranking__name">{{ entry.isCurrentUser ? 'Você' : entry.name }}</div>
-          <div class="ranking__points">{{ entry.points }} pts</div>
-        </div>
-
-        <div class="ranking__empty" *ngIf="rankingStudents.length === 0">
-          Nenhum participante no ranking ainda.
-        </div>
-      </mat-card-content>
-    </mat-card>
-  </ng-container>
+    </mat-tab>
+  </mat-tab-group>
 </div>

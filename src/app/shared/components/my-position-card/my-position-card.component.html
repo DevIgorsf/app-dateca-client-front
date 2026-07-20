@@ -1,0 +1,12 @@
+<div class="my-position">
+  <mat-icon class="my-position__icon" aria-hidden="false" fontIcon="military_tech"></mat-icon>
+  <div class="my-position__info">
+    <span class="my-position__label">Sua posição {{ label() }}</span>
+    <span class="my-position__value">
+      #{{ position() }}
+      @if (points(); as pts) {
+        <span class="my-position__points">{{ pts }} pts</span>
+      }
+    </span>
+  </div>
+</div>

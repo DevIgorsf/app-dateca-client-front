@@ -1,0 +1,18 @@
+<div class="ranking-skeleton">
+  <div class="ranking-skeleton__podium">
+    <div class="ranking-skeleton__podium-place ranking-skeleton__podium-place--second"></div>
+    <div class="ranking-skeleton__podium-place ranking-skeleton__podium-place--first"></div>
+    <div class="ranking-skeleton__podium-place ranking-skeleton__podium-place--third"></div>
+  </div>
+
+  <div class="ranking-skeleton__card">
+    @for (row of rowsArray(); track row) {
+      <div class="ranking-skeleton__row">
+        <div class="ranking-skeleton__bar ranking-skeleton__bar--position"></div>
+        <div class="ranking-skeleton__bar ranking-skeleton__bar--avatar"></div>
+        <div class="ranking-skeleton__bar ranking-skeleton__bar--name"></div>
+        <div class="ranking-skeleton__bar ranking-skeleton__bar--points"></div>
+      </div>
+    }
+  </div>
+</div>

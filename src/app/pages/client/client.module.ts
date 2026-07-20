@@ -21,7 +21,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { EnadeComponent } from './enade/enade.component';
 import { EnadeRespostaComponent } from './enade-resposta/enade-resposta.component';
-import { PontuacaoComponent } from './pontuacao/pontuacao.component';
 import { AdicionarComponent } from './adicionar/adicionar.component';
 
 @NgModule({
@@ -35,7 +34,6 @@ import { AdicionarComponent } from './adicionar/adicionar.component';
     ProfileComponent,
     EnadeComponent,
     EnadeRespostaComponent,
-    PontuacaoComponent,
     AdicionarComponent,
   ],
   imports: [

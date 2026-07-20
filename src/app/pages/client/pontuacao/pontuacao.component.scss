@@ -1,11 +1,5 @@
-@import '../../../shared/styles/podium';
-
 .ranking {
   margin: 24px clamp(16px, 4vw, 64px) 48px;
-}
-
-.podium {
-  margin-bottom: 24px;
 }
 
 .ranking__header {
@@ -39,141 +33,17 @@
   font-weight: 700;
 }
 
-.ranking__loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  color: #666;
-  padding: 60px 0;
-}
-
-.ranking__loading-icon {
-  animation: ranking-spin 1s linear infinite;
-}
-
-@keyframes ranking-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.ranking__card {
+.ranking__tabs {
   border-radius: 16px;
-}
-
-.ranking__card-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 16px 0;
-
-  h2 {
-    margin: 0;
-    font-size: 1.1rem;
-    font-weight: 700;
-  }
-}
-
-.ranking__count {
-  font-size: .75rem;
-  color: #666;
-  background: #f1f3f5;
-  padding: 4px 10px;
-  border-radius: 999px;
-  white-space: nowrap;
-}
-
-.ranking__row {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 12px 8px;
-  border-bottom: 1px solid #f0f0f0;
-  border-radius: 10px;
-
-  &:last-child {
-    border-bottom: none;
-  }
-}
-
-.ranking__row--you {
-  background: #eaf3ff;
-  border-left: 3px solid rgb(0, 119, 255);
-}
-
-.ranking__position {
-  width: 32px;
-  flex-shrink: 0;
-  text-align: center;
-  font-weight: 700;
-  font-size: 1.1rem;
-  color: #555;
-}
-
-.ranking__avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-weight: 700;
-  font-size: .75rem;
-  flex-shrink: 0;
-}
-
-.ranking__name {
-  flex: 1;
-  min-width: 0;
-  font-weight: 600;
-  color: #222;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
-.ranking__row--you .ranking__name {
-  color: rgb(0, 119, 255);
-}
-
-.ranking__points {
-  font-weight: 700;
-  font-size: .8rem;
-  color: #00a854;
-  background: #e6f7ec;
-  padding: 4px 12px;
-  border-radius: 999px;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.ranking__empty {
-  text-align: center;
-  padding: 32px 0;
-  color: #888;
+.ranking__tab-panel {
+  padding: 20px 4px 0;
 }
 
 @media (max-width: 640px) {
   .ranking {
     margin: 16px;
-  }
-
-  .podium {
-    padding: 20px 12px 0;
-    gap: 8px;
-  }
-
-  .podium__place {
-    width: 33%;
-  }
-
-  .podium__name {
-    max-width: 90px;
-    font-size: .8rem;
-  }
-
-  .ranking__points {
-    padding: 4px 8px;
   }
 }

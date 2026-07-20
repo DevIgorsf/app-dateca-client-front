@@ -1,61 +1,109 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, computed, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTabsModule } from '@angular/material/tabs';
 import { StudentService } from 'src/app/service/student/student.service';
+import { FriendDTO, FriendshipService } from 'src/app/service/friendship/friendship.service';
 import { buildRankingEntries, RankingEntry } from 'src/app/shared/utils/ranking.util';
+import { RankingListComponent } from 'src/app/shared/components/ranking-list/ranking-list.component';
+import { RankingSkeletonComponent } from 'src/app/shared/components/ranking-skeleton/ranking-skeleton.component';
+import { EmptyStateComponent } from 'src/app/shared/components/empty-state/empty-state.component';
+import { MyPositionCardComponent } from 'src/app/shared/components/my-position-card/my-position-card.component';
+
+const FRIENDS_PAGE_SIZE = 100;
 
 @Component({
   selector: 'app-pontuacao',
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatIconModule,
+    MatTabsModule,
+    RankingListComponent,
+    RankingSkeletonComponent,
+    EmptyStateComponent,
+    MyPositionCardComponent,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './pontuacao.component.html',
-  styleUrls: ['./pontuacao.component.scss']
+  styleUrls: ['./pontuacao.component.scss'],
 })
 export class PontuacaoComponent implements OnInit {
-  rankingStudents: RankingEntry[] = [];
-  loading = true;
+  protected geralEntries = signal<RankingEntry[]>([]);
+  protected geralLoading = signal(true);
 
-  private rawRanking: any[] = [];
+  protected amigosEntries = signal<RankingEntry[]>([]);
+  protected amigosLoading = signal(true);
+
+  protected myGeralEntry = computed(() => this.geralEntries().find((entry) => entry.isCurrentUser) ?? null);
+  protected myAmigosEntry = computed(() => this.amigosEntries().find((entry) => entry.isCurrentUser) ?? null);
+
+  private rawGeralRanking: any[] = [];
+  private rawFriends: FriendDTO[] | null = null;
+  private studentLoaded = false;
   private currentStudentName?: string;
+  private currentStudentPoints = 0;
 
   constructor(
-    private service: StudentService,
+    private studentService: StudentService,
+    private friendshipService: FriendshipService,
   ) {}
 
   ngOnInit(): void {
-    this.service.getRanking().subscribe({
+    this.studentService.getRanking().subscribe({
       next: (response) => {
-        this.rawRanking = response || [];
-        this.refreshEntries();
-        this.loading = false;
+        this.rawGeralRanking = response || [];
+        this.refreshGeralEntries();
+        this.geralLoading.set(false);
       },
       error: () => {
-        this.loading = false;
+        this.geralLoading.set(false);
       }
     });
 
-    this.service.getStudent().subscribe({
+    this.studentService.getStudent().subscribe({
       next: (student) => {
         this.currentStudentName = student?.name;
-        this.refreshEntries();
+        this.currentStudentPoints = student?.points ?? 0;
+        this.studentLoaded = true;
+        this.refreshGeralEntries();
+        this.refreshAmigosEntries();
       },
-      error: () => {}
+      error: () => {
+        this.studentLoaded = true;
+        this.refreshAmigosEntries();
+      }
+    });
+
+    this.friendshipService.getFriends(0, FRIENDS_PAGE_SIZE).subscribe({
+      next: (page) => {
+        this.rawFriends = page?.content ?? [];
+        this.refreshAmigosEntries();
+      },
+      error: () => {
+        this.rawFriends = [];
+        this.refreshAmigosEntries();
+      }
     });
   }
 
-  get first(): RankingEntry | undefined {
-    return this.rankingStudents[0];
+  private refreshGeralEntries(): void {
+    this.geralEntries.set(buildRankingEntries(this.rawGeralRanking, this.currentStudentName));
   }
 
-  get second(): RankingEntry | undefined {
-    return this.rankingStudents[1];
-  }
+  private refreshAmigosEntries(): void {
+    if (!this.studentLoaded || this.rawFriends === null) {
+      return;
+    }
 
-  get third(): RankingEntry | undefined {
-    return this.rankingStudents[2];
-  }
+    const combined = [
+      ...this.rawFriends.map((friend) => ({ name: friend.name, points: friend.points })),
+      ...(this.currentStudentName ? [{ name: this.currentStudentName, points: this.currentStudentPoints }] : []),
+    ].sort((a, b) => b.points - a.points);
 
-  get hasPodium(): boolean {
-    return this.rankingStudents.length >= 3;
-  }
-
-  private refreshEntries(): void {
-    this.rankingStudents = buildRankingEntries(this.rawRanking, this.currentStudentName);
+    this.amigosEntries.set(buildRankingEntries(combined.map((entry) => ({ student: entry })), this.currentStudentName));
+    this.amigosLoading.set(false);
   }
 }

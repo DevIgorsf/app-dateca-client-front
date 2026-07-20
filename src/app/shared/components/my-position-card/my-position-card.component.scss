@@ -1,0 +1,43 @@
+.my-position {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: linear-gradient(135deg, rgb(0, 119, 255), rgb(0, 90, 200));
+  color: #fff;
+  border-radius: 16px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+}
+
+.my-position__icon {
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.my-position__info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.my-position__label {
+  font-size: .8rem;
+  opacity: .85;
+}
+
+.my-position__value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.my-position__points {
+  font-size: .8rem;
+  font-weight: 600;
+  opacity: .9;
+}

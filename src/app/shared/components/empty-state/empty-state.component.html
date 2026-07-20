@@ -1,0 +1,15 @@
+<div class="empty-state">
+  <mat-icon class="empty-state__icon" aria-hidden="false" [fontIcon]="icon()"></mat-icon>
+  <h2 class="empty-state__title">{{ title() }}</h2>
+  <p class="empty-state__description">{{ description() }}</p>
+
+  @if (actionLabel(); as label) {
+    <a
+      class="empty-state__action"
+      mat-flat-button
+      color="primary"
+      [routerLink]="actionLink()">
+      {{ label }}
+    </a>
+  }
+</div>

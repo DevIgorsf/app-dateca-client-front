@@ -1,0 +1,60 @@
+@if (hasPodium()) {
+  <div class="podium">
+    <div class="podium__place podium__place--second">
+      <div class="podium__avatar" [style.background]="second()!.color">{{ second()!.initials }}</div>
+      <div class="podium__name">{{ second()!.isCurrentUser ? 'Você' : second()!.name }}</div>
+      <div class="podium__points">{{ second()!.points }} pts</div>
+      <div class="podium__step podium__step--second">
+        <span class="podium__medal">🥈</span>
+      </div>
+    </div>
+
+    <div class="podium__place podium__place--first">
+      <div class="podium__crown">👑</div>
+      <div class="podium__avatar podium__avatar--large" [style.background]="first()!.color">{{ first()!.initials }}</div>
+      <div class="podium__name">{{ first()!.isCurrentUser ? 'Você' : first()!.name }}</div>
+      <div class="podium__points">{{ first()!.points }} pts</div>
+      <div class="podium__step podium__step--first">
+        <span class="podium__medal">🥇</span>
+      </div>
+    </div>
+
+    <div class="podium__place podium__place--third">
+      <div class="podium__avatar" [style.background]="third()!.color">{{ third()!.initials }}</div>
+      <div class="podium__name">{{ third()!.isCurrentUser ? 'Você' : third()!.name }}</div>
+      <div class="podium__points">{{ third()!.points }} pts</div>
+      <div class="podium__step podium__step--third">
+        <span class="podium__medal">🥉</span>
+      </div>
+    </div>
+  </div>
+}
+
+<mat-card class="ranking__card">
+  <div class="ranking__card-header">
+    <h2>Classificação completa</h2>
+    <span class="ranking__count">{{ entries().length }} participantes</span>
+  </div>
+  <mat-card-content>
+    @for (entry of entries(); track entry.position) {
+      <div class="ranking__row" [class.ranking__row--you]="entry.isCurrentUser">
+        <div class="ranking__position">
+          @if (entry.position === 1) {
+            <span>🥇</span>
+          } @else if (entry.position === 2) {
+            <span>🥈</span>
+          } @else if (entry.position === 3) {
+            <span>🥉</span>
+          } @else {
+            <span>#{{ entry.position }}</span>
+          }
+        </div>
+        <div class="ranking__avatar" [style.background]="entry.color">{{ entry.initials }}</div>
+        <div class="ranking__name">{{ entry.isCurrentUser ? 'Você' : entry.name }}</div>
+        <div class="ranking__points">{{ entry.points }} pts</div>
+      </div>
+    } @empty {
+      <div class="ranking__empty">{{ emptyMessage() }}</div>
+    }
+  </mat-card-content>
+</mat-card>
