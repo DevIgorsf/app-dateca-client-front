@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EnadeService } from 'src/app/service/enade/enade.service';
 
@@ -6,6 +6,7 @@ import { EnadeService } from 'src/app/service/enade/enade.service';
     selector: 'app-enade-resposta',
     templateUrl: './enade-resposta.component.html',
     styleUrls: ['./enade-resposta.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class EnadeRespostaComponent {

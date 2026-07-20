@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { SigninComponent } from './pages/signin/signin.component';
 import { MessageModule } from './shared/message/message.module';
 import { AuthModule } from './service/auth/auth.module';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCardModule } from '@angular/material/card';
@@ -40,5 +40,5 @@ import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password
         MatButtonModule,
         MatFormFieldModule,
         MatIconModule,
-        MatToolbarModule], providers: [provideHttpClient(withInterceptorsFromDi())] })
+        MatToolbarModule], providers: [provideHttpClient(withXhr(), withInterceptorsFromDi())] })
 export class AppModule { }

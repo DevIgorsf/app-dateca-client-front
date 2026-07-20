@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { EnadeWithImage } from 'src/app/interfaces/EnadeWithImage';
@@ -9,6 +9,7 @@ import { EnadeService } from 'src/app/service/enade/enade.service';
     selector: 'app-enade',
     templateUrl: './enade.component.html',
     styleUrls: ['./enade.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class EnadeComponent {

@@ -1,5 +1,5 @@
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { QuestionMultipleChoice } from 'src/app/interfaces/questionMultipleChoice';
@@ -9,6 +9,7 @@ import { QuestionService } from 'src/app/service/question/question.service';
     selector: 'app-question',
     templateUrl: './question.component.html',
     styleUrls: ['./question.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class QuestionComponent implements OnInit {

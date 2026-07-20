@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { of, Subject, Subscription } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import {
@@ -17,6 +17,7 @@ const AVATAR_COLORS = [
     selector: 'app-adicionar',
     templateUrl: './adicionar.component.html',
     styleUrls: ['./adicionar.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AdicionarComponent implements OnInit, OnDestroy {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { QuestionService } from 'src/app/service/question/question.service';
 
@@ -6,6 +6,7 @@ import { QuestionService } from 'src/app/service/question/question.service';
     selector: 'app-question-resposta',
     templateUrl: './question-resposta.component.html',
     styleUrls: ['./question-resposta.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class QuestionRespostaComponent {
