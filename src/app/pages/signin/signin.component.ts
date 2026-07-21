@@ -32,7 +32,8 @@ export class SigninComponent implements OnInit {
       error: (error) => {
         if (error.status === 403) {
           this.toastr.error('Acesso negado. Verifique suas credenciais.');
-        } else {
+        } else if (error.status !== 0) {
+          // status 0 (API fora do ar) já exibe mensagem própria no AuthInterceptor
           this.toastr.error(error.message);
         }
       },
