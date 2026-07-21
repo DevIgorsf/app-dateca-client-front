@@ -37,7 +37,7 @@
           <div class="provas-table__row">
             <span class="provas-table__titulo">{{ prova.titulo }}</span>
             <span>
-              <span class="badge" [class]="statusClass(prova.status)">{{ statusLabel(prova.status) }}</span>
+              <span class="badge" [class]="statusClass(prova.status)">{{ prova.status }}</span>
             </span>
             <span>{{ prova.participantes > 0 ? prova.participantes : '—' }}</span>
             <span>{{ formatarData(prova.dataAbertura) }}</span>

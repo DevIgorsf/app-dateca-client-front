@@ -4,10 +4,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { EmptyStateComponent } from 'src/app/shared/components/empty-state/empty-state.component';
-import { ProvaSummary } from 'src/app/interfaces/prova';
+import { ProvaResumoDTO } from 'src/app/interfaces/prova';
 import { ProvaService } from 'src/app/service/prova/prova.service';
 import { formatarDataBr } from 'src/app/shared/utils/date.util';
-import { provaStatusClass, provaStatusLabel } from 'src/app/shared/utils/prova.util';
+import { provaStatusClass } from 'src/app/shared/utils/prova.util';
 
 @Component({
   selector: 'app-minhas-provas',
@@ -18,10 +18,9 @@ import { provaStatusClass, provaStatusLabel } from 'src/app/shared/utils/prova.u
 })
 export class MinhasProvasComponent implements OnInit {
   readonly formatarData = formatarDataBr;
-  readonly statusLabel = provaStatusLabel;
   readonly statusClass = provaStatusClass;
 
-  provas = signal<ProvaSummary[]>([]);
+  provas = signal<ProvaResumoDTO[]>([]);
   loading = signal(true);
   toastMessage = signal<string | null>(null);
 
@@ -36,8 +35,8 @@ export class MinhasProvasComponent implements OnInit {
   private carregar(): void {
     this.loading.set(true);
     this.provaService.getMinhasProvas().subscribe({
-      next: (page) => {
-        this.provas.set(page.content);
+      next: (provas) => {
+        this.provas.set(provas);
         this.loading.set(false);
       },
       error: () => {
@@ -46,15 +45,15 @@ export class MinhasProvasComponent implements OnInit {
     });
   }
 
-  podeVisualizar(prova: ProvaSummary): boolean {
-    return prova.status !== 'DRAFT';
+  podeVisualizar(prova: ProvaResumoDTO): boolean {
+    return prova.status !== 'Rascunho';
   }
 
-  podeCompartilhar(prova: ProvaSummary): boolean {
-    return prova.status === 'ACTIVE' || prova.status === 'CLOSED';
+  podeCompartilhar(prova: ProvaResumoDTO): boolean {
+    return prova.status === 'Ativo' || prova.status === 'Encerrado';
   }
 
-  compartilhar(prova: ProvaSummary): void {
+  compartilhar(prova: ProvaResumoDTO): void {
     if (!this.podeCompartilhar(prova)) {
       return;
     }
@@ -63,7 +62,7 @@ export class MinhasProvasComponent implements OnInit {
     this.mostrarToast('Link da prova copiado para a área de transferência.');
   }
 
-  excluir(prova: ProvaSummary): void {
+  excluir(prova: ProvaResumoDTO): void {
     const confirmado = window.confirm(`Excluir a prova "${prova.titulo}"? Esta ação não pode ser desfeita.`);
     if (!confirmado) {
       return;

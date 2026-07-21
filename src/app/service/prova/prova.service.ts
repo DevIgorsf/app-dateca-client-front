@@ -1,21 +1,10 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Prova, ProvaRequest, ProvaSummary } from 'src/app/interfaces/prova';
+import { ProvaDetalheDTO, ProvaForm, ProvaResumoDTO } from 'src/app/interfaces/prova';
 
 const API = environment.ApiUrl;
-
-export interface Page<T> {
-  content: T[];
-  totalElements: number;
-  totalPages: number;
-  number: number;
-  size: number;
-  first: boolean;
-  last: boolean;
-  empty: boolean;
-}
 
 export const DISCIPLINAS = [
   'Matemática',
@@ -41,24 +30,23 @@ export class ProvaService {
     private http: HttpClient,
   ) { }
 
-  getMinhasProvas(page = 0, size = 20): Observable<Page<ProvaSummary>> {
-    const params = new HttpParams().set('page', page).set('size', size);
-    return this.http.get<Page<ProvaSummary>>(`${API}/me/provas`, { params });
+  getMinhasProvas(): Observable<ProvaResumoDTO[]> {
+    return this.http.get<ProvaResumoDTO[]>(`${API}/prova/minhas`);
   }
 
-  getProva(id: string): Observable<Prova> {
-    return this.http.get<Prova>(`${API}/provas/${id}`);
+  getProva(id: string): Observable<ProvaDetalheDTO> {
+    return this.http.get<ProvaDetalheDTO>(`${API}/prova/${id}`);
   }
 
-  criarProva(request: ProvaRequest): Observable<Prova> {
-    return this.http.post<Prova>(`${API}/provas`, request);
+  criarProva(form: ProvaForm): Observable<ProvaDetalheDTO> {
+    return this.http.post<ProvaDetalheDTO>(`${API}/prova`, form);
   }
 
-  atualizarProva(id: string, request: ProvaRequest): Observable<Prova> {
-    return this.http.put<Prova>(`${API}/provas/${id}`, request);
+  atualizarProva(id: string, form: ProvaForm): Observable<ProvaDetalheDTO> {
+    return this.http.put<ProvaDetalheDTO>(`${API}/prova/${id}`, form);
   }
 
   excluirProva(id: string): Observable<void> {
-    return this.http.delete<void>(`${API}/provas/${id}`);
+    return this.http.delete<void>(`${API}/prova/${id}`);
   }
 }

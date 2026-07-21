@@ -1,11 +1,10 @@
 import { PointsEnum } from './pointsEnum';
 
-export type ProvaStatus = 'DRAFT' | 'SCHEDULED' | 'ACTIVE' | 'CLOSED';
-export type ProvaVisibility = 'EVERYONE' | 'FRIENDS' | 'GROUP';
+export type ProvaStatus = 'Rascunho' | 'Agendado' | 'Ativo' | 'Encerrado';
+export type ProvaVisibilidade = 'TODOS' | 'AMIGOS' | 'GRUPO';
 export type ProvaAlternative = 'A' | 'B' | 'C' | 'D' | 'E';
 
-export interface ProvaQuestao {
-  id?: string;
+export interface ProvaQuestaoForm {
   statement: string;
   alternativeA: string;
   alternativeB: string;
@@ -13,49 +12,57 @@ export interface ProvaQuestao {
   alternativeD: string;
   alternativeE: string;
   correctAnswer: ProvaAlternative | '';
-  comment: string;
+  comment: string | null;
 }
 
-export interface ProvaSummary {
+export interface ProvaQuestaoDTO extends ProvaQuestaoForm {
+  id: string;
+  ordem: number;
+}
+
+/** Body de POST /prova e PUT /prova/:id */
+export interface ProvaForm {
+  titulo: string;
+  descricao: string | null;
+  disciplina: string;
+  dificuldade: PointsEnum;
+  capaUrl: string | null;
+  questoes: ProvaQuestaoForm[];
+  dataAbertura: string | null;
+  horaAbertura: string | null;
+  dataEncerramento: string | null;
+  maxParticipantes: number | null;
+  visibilidade: ProvaVisibilidade;
+  /** 'Rascunho' salva sem publicar; null (ou qualquer outro valor) publica imediatamente */
+  status: 'Rascunho' | null;
+}
+
+/** Itens de GET /prova/minhas e GET /prova/publicas */
+export interface ProvaResumoDTO {
   id: string;
   titulo: string;
   disciplina: string;
-  status: ProvaStatus;
-  participantes: number;
-  dataAbertura: string | null;
-  dataEncerramento: string | null;
-  rankingDisponivel: boolean;
-}
-
-export interface Prova extends ProvaSummary {
-  descricao: string;
   dificuldade: PointsEnum;
   capaUrl: string | null;
-  questoes: ProvaQuestao[];
+  status: ProvaStatus;
+  participantes: number;
+  rankingDisponivel: boolean;
+  dataAbertura: string | null;
   horaAbertura: string | null;
+  dataEncerramento: string | null;
   maxParticipantes: number | null;
-  visibilidade: ProvaVisibility;
-  criadorId: string;
+  visibilidade: ProvaVisibilidade;
   criadaEm: string;
 }
 
-export interface ProvaRequest {
-  titulo: string;
-  descricao: string;
-  disciplina: string;
-  dificuldade: PointsEnum;
-  capaUrl: string | null;
-  questoes: ProvaQuestao[];
-  dataAbertura: string | null;
-  horaAbertura: string | null;
-  dataEncerramento: string | null;
-  maxParticipantes: number | null;
-  visibilidade: ProvaVisibility;
-  /** true = publicar imediatamente (Agendado/Ativo conforme a data); false = salvar como rascunho */
-  publicar: boolean;
+/** Retorno de GET /prova/:id, POST /prova e PUT /prova/:id */
+export interface ProvaDetalheDTO extends ProvaResumoDTO {
+  descricao: string | null;
+  criadorId: string;
+  questoes: ProvaQuestaoDTO[];
 }
 
-export function novaQuestaoVazia(): ProvaQuestao {
+export function novaQuestaoVazia(): ProvaQuestaoForm {
   return {
     statement: '',
     alternativeA: '',

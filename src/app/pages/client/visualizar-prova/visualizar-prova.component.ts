@@ -3,7 +3,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { EmptyStateComponent } from 'src/app/shared/components/empty-state/empty-state.component';
-import { Prova } from 'src/app/interfaces/prova';
+import { ProvaDetalheDTO } from 'src/app/interfaces/prova';
 import { ProvaService } from 'src/app/service/prova/prova.service';
 import { formatarDataBr } from 'src/app/shared/utils/date.util';
 
@@ -17,7 +17,7 @@ import { formatarDataBr } from 'src/app/shared/utils/date.util';
 export class VisualizarProvaComponent implements OnInit {
   readonly formatarData = formatarDataBr;
 
-  prova = signal<Prova | null>(null);
+  prova = signal<ProvaDetalheDTO | null>(null);
   loading = signal(true);
   notFound = signal(false);
 

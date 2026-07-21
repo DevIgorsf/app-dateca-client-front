@@ -4,10 +4,10 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { PointsEnum } from 'src/app/interfaces/pointsEnum';
-import { Prova, ProvaQuestao, ProvaRequest, ProvaVisibility, novaQuestaoVazia } from 'src/app/interfaces/prova';
+import { ProvaDetalheDTO, ProvaForm, ProvaQuestaoForm, ProvaVisibilidade, novaQuestaoVazia } from 'src/app/interfaces/prova';
 import { DISCIPLINAS, ProvaService } from 'src/app/service/prova/prova.service';
 import { formatarDataBr } from 'src/app/shared/utils/date.util';
-import { provaVisibilityLabel } from 'src/app/shared/utils/prova.util';
+import { provaVisibilidadeLabel } from 'src/app/shared/utils/prova.util';
 
 const ALTERNATIVAS: Array<'A' | 'B' | 'C' | 'D' | 'E'> = ['A', 'B', 'C', 'D', 'E'];
 const MAX_CAPA_BYTES = 5 * 1024 * 1024;
@@ -37,7 +37,7 @@ export class CriarProvaComponent implements OnInit {
   questoesForm: FormArray;
   configuracaoForm: FormGroup;
 
-  private existente?: Prova;
+  private existente?: ProvaDetalheDTO;
 
   constructor(
     private fb: FormBuilder,
@@ -59,7 +59,7 @@ export class CriarProvaComponent implements OnInit {
       horaAbertura: [''],
       dataEncerramento: [''],
       maxParticipantes: [null],
-      visibilidade: ['EVERYONE' as ProvaVisibility, Validators.required],
+      visibilidade: ['TODOS' as ProvaVisibilidade, Validators.required],
     });
   }
 
@@ -78,7 +78,7 @@ export class CriarProvaComponent implements OnInit {
     }
   }
 
-  private criarQuestaoGroup(questao?: ProvaQuestao): FormGroup {
+  private criarQuestaoGroup(questao?: ProvaQuestaoForm): FormGroup {
     const q = questao ?? novaQuestaoVazia();
     return this.fb.group({
       statement: [q.statement],
@@ -92,7 +92,7 @@ export class CriarProvaComponent implements OnInit {
     });
   }
 
-  private preencherFormulario(prova: Prova): void {
+  private preencherFormulario(prova: ProvaDetalheDTO): void {
     this.informacoesForm.patchValue({
       titulo: prova.titulo,
       descricao: prova.descricao,
@@ -248,30 +248,30 @@ export class CriarProvaComponent implements OnInit {
   }
 
   get visibilidadeLabel(): string {
-    return provaVisibilityLabel(this.configuracaoForm.get('visibilidade')?.value);
+    return provaVisibilidadeLabel(this.configuracaoForm.get('visibilidade')?.value);
   }
 
   salvarRascunho(): void {
-    this.salvar(false);
+    this.salvar(true);
   }
 
   publicar(): void {
     if (!this.prontaParaPublicar) {
       return;
     }
-    this.salvar(true);
+    this.salvar(false);
   }
 
-  private salvar(publicar: boolean): void {
+  private salvar(comoRascunho: boolean): void {
     this.saving.set(true);
     this.erroSalvar.set(null);
     const info = this.informacoesForm.value;
     const config = this.configuracaoForm.value;
-    const questoes: ProvaQuestao[] = this.questoesArray
-      .map((q) => q.value as ProvaQuestao)
+    const questoes: ProvaQuestaoForm[] = this.questoesArray
+      .map((q) => q.value as ProvaQuestaoForm)
       .filter((q) => q.statement.trim().length > 0);
 
-    const request: ProvaRequest = {
+    const form: ProvaForm = {
       titulo: info.titulo,
       descricao: info.descricao,
       disciplina: info.disciplina,
@@ -283,12 +283,12 @@ export class CriarProvaComponent implements OnInit {
       dataEncerramento: config.dataEncerramento || null,
       maxParticipantes: config.maxParticipantes || null,
       visibilidade: config.visibilidade,
-      publicar,
+      status: comoRascunho ? 'Rascunho' : null,
     };
 
     const resultado$ = this.editId
-      ? this.provaService.atualizarProva(this.editId, request)
-      : this.provaService.criarProva(request);
+      ? this.provaService.atualizarProva(this.editId, form)
+      : this.provaService.criarProva(form);
 
     resultado$.subscribe({
       next: () => {

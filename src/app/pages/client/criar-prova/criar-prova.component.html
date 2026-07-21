@@ -158,24 +158,24 @@
 
         <label class="field-label">Quem pode participar</label>
         <div class="visibility-options">
-          <button type="button" class="visibility-card" [class.visibility-card--active]="configuracaoForm.get('visibilidade')?.value === 'EVERYONE'"
-            (click)="configuracaoForm.patchValue({visibilidade: 'EVERYONE'})">
+          <button type="button" class="visibility-card" [class.visibility-card--active]="configuracaoForm.get('visibilidade')?.value === 'TODOS'"
+            (click)="configuracaoForm.patchValue({visibilidade: 'TODOS'})">
             <span class="visibility-card__radio"></span>
             <span class="visibility-card__text">
               <strong>Todos os usuários</strong>
               <small>Qualquer pessoa na plataforma pode participar.</small>
             </span>
           </button>
-          <button type="button" class="visibility-card" [class.visibility-card--active]="configuracaoForm.get('visibilidade')?.value === 'FRIENDS'"
-            (click)="configuracaoForm.patchValue({visibilidade: 'FRIENDS'})">
+          <button type="button" class="visibility-card" [class.visibility-card--active]="configuracaoForm.get('visibilidade')?.value === 'AMIGOS'"
+            (click)="configuracaoForm.patchValue({visibilidade: 'AMIGOS'})">
             <span class="visibility-card__radio"></span>
             <span class="visibility-card__text">
               <strong>Somente amigos</strong>
               <small>Apenas seus amigos têm acesso.</small>
             </span>
           </button>
-          <button type="button" class="visibility-card" [class.visibility-card--active]="configuracaoForm.get('visibilidade')?.value === 'GROUP'"
-            (click)="configuracaoForm.patchValue({visibilidade: 'GROUP'})">
+          <button type="button" class="visibility-card" [class.visibility-card--active]="configuracaoForm.get('visibilidade')?.value === 'GRUPO'"
+            (click)="configuracaoForm.patchValue({visibilidade: 'GRUPO'})">
             <span class="visibility-card__radio"></span>
             <span class="visibility-card__text">
               <strong>Grupo específico</strong>
@@ -183,7 +183,7 @@
             </span>
           </button>
         </div>
-        @if (configuracaoForm.get('visibilidade')?.value === 'GROUP') {
+        @if (configuracaoForm.get('visibilidade')?.value === 'GRUPO') {
           <div class="field-hint">
             Criação de grupos em breve — por enquanto a prova ficará visível para todos os usuários.
           </div>

@@ -1,27 +1,18 @@
-import { ProvaStatus, ProvaVisibility } from 'src/app/interfaces/prova';
-
-export function provaStatusLabel(status: ProvaStatus): string {
-  switch (status) {
-    case 'DRAFT': return 'Rascunho';
-    case 'SCHEDULED': return 'Agendado';
-    case 'ACTIVE': return 'Ativo';
-    case 'CLOSED': return 'Encerrado';
-  }
-}
+import { ProvaStatus, ProvaVisibilidade } from 'src/app/interfaces/prova';
 
 export function provaStatusClass(status: ProvaStatus): string {
   switch (status) {
-    case 'DRAFT': return 'badge--rascunho';
-    case 'SCHEDULED': return 'badge--agendado';
-    case 'ACTIVE': return 'badge--ativo';
-    case 'CLOSED': return 'badge--encerrado';
+    case 'Rascunho': return 'badge--rascunho';
+    case 'Agendado': return 'badge--agendado';
+    case 'Ativo': return 'badge--ativo';
+    case 'Encerrado': return 'badge--encerrado';
   }
 }
 
-export function provaVisibilityLabel(visibilidade: ProvaVisibility): string {
+export function provaVisibilidadeLabel(visibilidade: ProvaVisibilidade): string {
   switch (visibilidade) {
-    case 'FRIENDS': return 'Somente amigos';
-    case 'GROUP': return 'Grupo específico';
+    case 'AMIGOS': return 'Somente amigos';
+    case 'GRUPO': return 'Grupo específico';
     default: return 'Todos os usuários';
   }
 }
