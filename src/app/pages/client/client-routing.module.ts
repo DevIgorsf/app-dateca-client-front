@@ -10,6 +10,7 @@ import { EnadeRespostaComponent } from './enade-resposta/enade-resposta.componen
 import { PontuacaoComponent } from './pontuacao/pontuacao.component';
 import { AdicionarComponent } from './adicionar/adicionar.component';
 import { CriarProvaComponent } from './criar-prova/criar-prova.component';
+import { NovaProvaComponent } from './nova-prova/nova-prova.component';
 import { MinhasProvasComponent } from './minhas-provas/minhas-provas.component';
 import { VisualizarProvaComponent } from './visualizar-prova/visualizar-prova.component';
 
@@ -58,6 +59,10 @@ const routes: Routes = [
       },
       {
         path: 'provas/criar',
+        component: NovaProvaComponent,
+      },
+      {
+        path: 'provas/criar/manual',
         component: CriarProvaComponent,
       },
       {

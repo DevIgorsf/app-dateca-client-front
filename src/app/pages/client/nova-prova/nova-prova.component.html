@@ -1,0 +1,36 @@
+<div class="nova-prova">
+  <div class="nova-prova__header">
+    <a class="nova-prova__back" role="button" routerLink="/client/provas" aria-label="Voltar">
+      <mat-icon aria-hidden="false" fontIcon="arrow_back"></mat-icon>
+    </a>
+    <h1 class="nova-prova__title">Criar Nova Prova</h1>
+  </div>
+
+  <p class="nova-prova__subtitle">Escolha como você quer montar a sua prova.</p>
+
+  <div class="nova-prova__options">
+    <a class="option-card" routerLink="/client/provas/criar/manual">
+      <span class="option-card__icon option-card__icon--manual">
+        <mat-icon aria-hidden="false" fontIcon="edit_note"></mat-icon>
+      </span>
+      <strong class="option-card__title">Criar prova</strong>
+      <span class="option-card__desc">Monte a prova questão por questão, definindo enunciados, alternativas e respostas.</span>
+      <span class="option-card__action">
+        Começar do zero
+        <mat-icon aria-hidden="false" fontIcon="chevron_right"></mat-icon>
+      </span>
+    </a>
+
+    <a class="option-card" routerLink="/client/importacao">
+      <span class="option-card__icon option-card__icon--import">
+        <mat-icon aria-hidden="false" fontIcon="upload_file"></mat-icon>
+      </span>
+      <strong class="option-card__title">Importar prova</strong>
+      <span class="option-card__desc">Envie um PDF e deixe a IA identificar a capa e as questões automaticamente. Você revisa antes de publicar.</span>
+      <span class="option-card__action">
+        Enviar um PDF
+        <mat-icon aria-hidden="false" fontIcon="chevron_right"></mat-icon>
+      </span>
+    </a>
+  </div>
+</div>
