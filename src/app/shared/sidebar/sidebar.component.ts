@@ -13,6 +13,7 @@ const STORAGE_KEY = 'sidebar_collapsed';
 })
 export class SidebarComponent implements OnInit {
   collapsed = false;
+  readonly usuario$ = this.userService.retornaUsuario();
 
   constructor(
     private userService: UserService,

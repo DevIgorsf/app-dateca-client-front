@@ -114,6 +114,20 @@
         <span>Perfil</span>
       }
     </a>
+
+    @if ((usuario$ | async)?.role !== 'STUDENT') {
+      <a
+        class="sidebar__link"
+        routerLink="/client/importacao"
+        routerLinkActive="sidebar__link--active"
+        [matTooltip]="collapsed ? 'Importar Prova' : ''"
+        matTooltipPosition="right">
+        <mat-icon aria-hidden="false" fontIcon="upload_file"></mat-icon>
+        @if (!collapsed) {
+          <span>Importar Prova</span>
+        }
+      </a>
+    }
   </nav>
 
   <div class="sidebar__footer">

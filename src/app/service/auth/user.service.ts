@@ -28,8 +28,9 @@ export class UserService {
 
   verificarRole(token: string) {
     const usuario = jwt_decode(token) as User;
-    if (usuario.role !== "STUDENT"){
-      throw new Error('Usuário não tem permissão ALUNO');
+    const rolesPermitidas = ['STUDENT', 'PROFESSOR', 'ADMIN'];
+    if (!usuario.role || !rolesPermitidas.includes(usuario.role)) {
+      throw new Error('Usuário não tem permissão para acessar esta aplicação');
     }
   }
 

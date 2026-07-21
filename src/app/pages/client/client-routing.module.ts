@@ -68,6 +68,16 @@ const routes: Routes = [
         path: 'provas/visualizar/:id',
         component: VisualizarProvaComponent,
       },
+      {
+        path: 'importacao',
+        loadComponent: () =>
+          import('./importacao/upload/importacao-upload.component').then((m) => m.ImportacaoUploadComponent),
+      },
+      {
+        path: 'importacao/:jobId/revisao',
+        loadComponent: () =>
+          import('./importacao/revisao/importacao-revisao.component').then((m) => m.ImportacaoRevisaoComponent),
+      },
     ]
   },
 ];
