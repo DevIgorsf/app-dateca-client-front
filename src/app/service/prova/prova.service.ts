@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { ProvaDetalheDTO, ProvaForm, ProvaResumoDTO } from 'src/app/interfaces/prova';
+import { ProvaDetalheDTO, ProvaForm, ProvaRankingDTO, ProvaResumoDTO } from 'src/app/interfaces/prova';
 
 const API = environment.ApiUrl;
 
@@ -36,6 +36,11 @@ export class ProvaService {
 
   getProva(id: string): Observable<ProvaDetalheDTO> {
     return this.http.get<ProvaDetalheDTO>(`${API}/prova/${id}`);
+  }
+
+  /** Ranking da prova, ordenado pelo total de acertos. Só disponível quando `rankingDisponivel`. */
+  getRankingProva(id: string): Observable<ProvaRankingDTO[]> {
+    return this.http.get<ProvaRankingDTO[]>(`${API}/prova/${id}/ranking`);
   }
 
   criarProva(form: ProvaForm): Observable<ProvaDetalheDTO> {

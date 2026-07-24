@@ -116,6 +116,86 @@
   margin: 0 0 12px;
 }
 
+.ranking-prova {
+  border-radius: 16px;
+  padding: 8px 12px;
+  margin-bottom: 24px;
+}
+
+.ranking-prova__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 8px;
+  border-bottom: 1px solid #f0f1f3;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &--you {
+    background: #eef5ff;
+    border-radius: 10px;
+    border-bottom-color: transparent;
+  }
+}
+
+.ranking-prova__position {
+  width: 34px;
+  text-align: center;
+  font-weight: 700;
+  color: #666;
+  font-size: .9rem;
+  flex-shrink: 0;
+}
+
+.ranking-prova__avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: .8rem;
+  flex-shrink: 0;
+}
+
+.ranking-prova__name {
+  flex: 1;
+  min-width: 0;
+  font-weight: 600;
+  color: #222;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ranking-prova__row--you .ranking-prova__name {
+  color: rgb(0, 96, 204);
+}
+
+.ranking-prova__acertos {
+  flex-shrink: 0;
+  font-weight: 700;
+  color: #222;
+  font-variant-numeric: tabular-nums;
+
+  small {
+    margin-left: 4px;
+    font-weight: 500;
+    font-size: .72rem;
+    color: #9aa0a6;
+  }
+}
+
+.ranking-prova__empty {
+  padding: 24px 8px;
+  text-align: center;
+  color: #888;
+}
+
 .question-view {
   border-radius: 14px;
   padding: 18px;

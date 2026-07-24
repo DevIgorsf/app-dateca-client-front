@@ -62,6 +62,16 @@ export interface ProvaDetalheDTO extends ProvaResumoDTO {
   questoes: ProvaQuestaoDTO[];
 }
 
+/** Itens de GET /prova/:id/ranking (ordenado pelo total de acertos) */
+export interface ProvaRankingDTO {
+  posicao: number;
+  studentId: string;
+  nomeAluno: string;
+  pontuacao: number;
+  acertos: number;
+  respondidoEm: string;
+}
+
 export function novaQuestaoVazia(): ProvaQuestaoForm {
   return {
     statement: '',

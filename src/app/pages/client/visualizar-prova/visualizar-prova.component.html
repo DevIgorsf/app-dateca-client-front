@@ -60,6 +60,38 @@
       }
     </mat-card>
 
+    @if (p.rankingDisponivel) {
+      <h2 class="section-title">Ranking por acertos</h2>
+      <mat-card class="ranking-prova">
+        @if (rankingLoading()) {
+          <div class="ranking-prova__empty">Carregando ranking...</div>
+        } @else {
+          @for (row of ranking(); track row.posicao) {
+            <div class="ranking-prova__row" [class.ranking-prova__row--you]="row.isCurrentUser">
+              <div class="ranking-prova__position">
+                @if (row.posicao === 1) {
+                  <span>🥇</span>
+                } @else if (row.posicao === 2) {
+                  <span>🥈</span>
+                } @else if (row.posicao === 3) {
+                  <span>🥉</span>
+                } @else {
+                  <span>#{{ row.posicao }}</span>
+                }
+              </div>
+              <div class="ranking-prova__avatar" [style.background]="row.cor">{{ row.iniciais }}</div>
+              <div class="ranking-prova__name">{{ row.isCurrentUser ? 'Você' : row.nome }}</div>
+              <div class="ranking-prova__acertos">
+                {{ row.acertos }}<small>/ {{ p.questoes.length }} acertos</small>
+              </div>
+            </div>
+          } @empty {
+            <div class="ranking-prova__empty">Ninguém respondeu esta prova ainda.</div>
+          }
+        }
+      </mat-card>
+    }
+
     <h2 class="section-title">Questões ({{ p.questoes.length }})</h2>
 
     @for (q of p.questoes; track q.id ?? $index; let i = $index) {
